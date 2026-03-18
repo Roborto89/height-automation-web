@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+:root {
+  --bg-color: #0b0e14;
+  --card-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --accent-color: #38bdf8;
+  --accent-glow: rgba(56, 189, 248, 0.3);
+  --success-color: #10b981;
+  --danger-color: #ef4444;
+  --nav-height: 70px;
+}
+
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  
+  --color-bg-primary: var(--bg-color);
+  --color-accent: var(--accent-color);
+  --color-glass: var(--card-bg);
+  --color-glass-border: var(--glass-border);
+}
+
+@layer base {
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer components {
+  .glass {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 1rem;
+  }
+  
+  .btn-primary {
+    @apply px-6 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center gap-2;
+    background: var(--accent-color);
+    color: var(--bg-color);
+  }
+  
+  .btn-primary:hover {
+    filter: brightness(1.2);
+    box-shadow: 0 0 20px var(--accent-glow);
+  }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 5px var(--accent-glow); }
+  50% { box-shadow: 0 0 20px var(--accent-glow); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
