@@ -26,10 +26,27 @@ export const db = {
   },
 
   async authenticate(email: string, password?: string): Promise<{ success: boolean; user?: User; message?: string }> {
+    if (supabase && password) {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        return { success: false, message: error.message };
+      }
+
+      const user = await this.getUserByEmail(email);
+      if (!user) return { success: false, message: 'Profile not found.' };
+      if (!user.active) return { success: false, message: 'Account deactivated.' };
+
+      return { success: true, user };
+    }
+
+    // Fallback for local prototyping
     const user = await this.getUserByEmail(email);
     if (!user) return { success: false, message: 'Invalid credentials. Access denied.' };
-    if (!user.active) return { success: false, message: 'Account deactivated. Contact Admin.' };
-
+    
     if (user.active) {
        if (email === 'admin@heightauto.com' && password !== 'AdminPassword123!') {
          return { success: false, message: 'Invalid Administrative credentials.' };
@@ -43,7 +60,13 @@ export const db = {
   async getTimeEntries(userId: string): Promise<TimeEntry[]> {
     if (!supabase) return mockDb.getTimeEntries(userId);
     const { data, error } = await supabase.from('time_entries').select('*').eq('user_id', userId);
-    return (data as TimeEntry[]) || [];
+    return (data?.map(e => ({
+      id: e.id,
+      userId: e.user_id,
+      clockInAt: e.clock_in_at,
+      clockOutAt: e.clock_out_at,
+      notes: e.notes
+    })) as TimeEntry[]) || [];
   },
 
   async getActiveEntry(userId: string): Promise<TimeEntry | undefined> {
@@ -64,14 +87,29 @@ export const db = {
       .eq('user_id', userId)
       .is('clock_out_at', null)
       .select().single();
+    
+    if (data) return {
+      id: data.id,
+      userId: data.user_id,
+      clockInAt: data.clock_in_at,
+      clockOutAt: data.clock_out_at,
+      notes: data.notes
+    };
     return data;
   },
 
   // Blog
   async getBlogPosts(): Promise<BlogPost[]> {
     if (!supabase) return mockDb.getBlogPosts();
-    const { data, error } = await supabase.from('blog_posts').select('*').order('published_at', { ascending: false });
-    return (data as any[]) || [];
+    const { data, error } = await supabase.from('blog_posts').select('*, profiles(name)').order('published_at', { ascending: false });
+    return (data?.map(p => ({
+      id: p.id,
+      title: p.title,
+      content: p.content,
+      category: p.category,
+      publishedAt: p.published_at,
+      author: (p.profiles as any)?.name || 'Admin'
+    })) as BlogPost[]) || [];
   },
 
   async addBlogPost(post: Omit<BlogPost, 'id' | 'publishedAt'>) {
