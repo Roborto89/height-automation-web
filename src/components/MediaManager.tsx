@@ -158,28 +158,49 @@ export default function MediaManager() {
               <span className="text-[10px] font-mono text-slate-600 uppercase">{media.length} Synchronized Units</span>
            </div>
 
-           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {media.map((item) => (
-                <div key={item.id} className="glass group relative aspect-[4/3] bg-slate-900/50 flex flex-col items-center justify-center p-4 border-white/5 hover:border-sky-500/30 transition-all">
-                   <div className="text-slate-800 group-hover:text-sky-500/20 transition-colors">
-                      {item.type === 'video' ? <Film className="w-12 h-12" /> : <ImageIcon className="w-12 h-12" />}
-                   </div>
-                   
-                   <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-slate-950 to-transparent flex items-center justify-between translate-y-2 group-hover:translate-y-0 transition-transform">
-                      <div className="overflow-hidden">
-                         <p className="text-xs font-bold text-white truncate uppercase tracking-tighter">{item.title}</p>
-                         <p className="text-[8px] text-slate-500 font-black uppercase tracking-widest">{item.category}</p>
-                      </div>
-                      <button 
-                        onClick={() => handleDelete(item.id)}
-                        className="p-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition-all shadow-lg shadow-red-500/10"
-                      >
-                         <Trash2 className="w-4 h-4" />
-                      </button>
-                   </div>
-                </div>
-              ))}
-           </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+               {media.map((item) => (
+                 <div key={item.id} className="glass group relative aspect-[4/3] bg-slate-900/50 overflow-hidden border-white/5 hover:border-sky-500/30 transition-all">
+                    {/* Real Media Rendering */}
+                    <div className="absolute inset-0 w-full h-full">
+                       {item.type === 'video' ? (
+                          <video 
+                            src={item.url} 
+                            className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity" 
+                            muted 
+                            loop 
+                            onMouseOver={(e) => e.currentTarget.play()}
+                            onMouseOut={(e) => e.currentTarget.pause()}
+                          />
+                       ) : (
+                          <img 
+                            src={item.url} 
+                            alt={item.title} 
+                            className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity" 
+                          />
+                       )}
+                       
+                       {/* Overlay Icon for Type Identification if opacity is low */}
+                       <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-white/10 group-hover:text-transparent transition-colors">
+                          {item.type === 'video' ? <Film className="w-12 h-12" /> : <ImageIcon className="w-12 h-12" />}
+                       </div>
+                    </div>
+                    
+                    <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent flex items-center justify-between translate-y-2 group-hover:translate-y-0 transition-transform">
+                       <div className="overflow-hidden">
+                          <p className="text-xs font-bold text-white truncate uppercase tracking-tighter">{item.title}</p>
+                          <p className="text-[8px] text-sky-400 font-black uppercase tracking-widest">{item.category}</p>
+                       </div>
+                       <button 
+                         onClick={() => handleDelete(item.id)}
+                         className="p-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition-all shadow-lg shadow-red-500/10"
+                       >
+                          <Trash2 className="w-4 h-4" />
+                       </button>
+                    </div>
+                 </div>
+               ))}
+            </div>
 
            {media.length === 0 && (
              <div className="glass p-20 flex flex-col items-center justify-center text-center space-y-4 border-dashed opacity-50">
