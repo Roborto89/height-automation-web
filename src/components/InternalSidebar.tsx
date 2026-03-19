@@ -4,12 +4,14 @@ import { useAuth } from "@/components/AuthContext";
 import {
   Clock,
   Users,
-  BarChart3,
   LogOut,
   Settings,
   ChevronRight,
   PenTool,
-  LayoutGrid
+  FileText,
+  TrendingUp,
+  Image,
+  LayoutDashboard
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -20,19 +22,25 @@ interface SidebarProps {
 export default function InternalSidebar({ activeTab, setActiveTab }: SidebarProps) {
   const { user, logout } = useAuth();
 
-  const menuItems = [
-    { id: 'time', label: 'Time Tracking', icon: <Clock className="w-4 h-4" /> },
-    { id: 'history', label: 'My Timesheets', icon: <BarChart3 className="w-4 h-4" /> },
+  // Replaced menuItems with navItems and updated structure
+  const navItems = [
+    { name: 'Time Tracking', icon: Clock, id: 'time' },
+    { name: 'My Timesheets', icon: FileText, id: 'timesheets' },
+    { name: 'Manage Users', icon: Users, id: 'users' },
+    { name: 'Blog Manager', icon: PenTool, id: 'blog' },
+    { name: 'Media Library', icon: Image, id: 'media' },
+    { name: 'Reports', icon: TrendingUp, id: 'reports' },
   ];
 
-  if (user?.role === 'ADMIN') {
-    menuItems.push(
-      { id: 'users', label: 'Manage Users', icon: <Users className="w-4 h-4" /> },
-      { id: 'blog', label: 'Blog Manager', icon: <PenTool className="w-4 h-4" /> },
-      { id: 'media', label: 'Media Library', icon: <LayoutGrid className="w-4 h-4" /> },
-      { id: 'reports', label: 'Reports', icon: <BarChart3 className="w-4 h-4" /> }
-    );
-  }
+  // Filter navItems based on user role
+  const filteredNavItems = navItems.filter(item => {
+    if (user?.role === 'ADMIN') {
+      return true; // Admin sees all items
+    } else {
+      // Non-admin users only see 'Time Tracking' and 'My Timesheets'
+      return item.id === 'time' || item.id === 'timesheets';
+    }
+  });
 
   return (
     <div className="w-64 bg-slate-900 border-r border-white/5 h-screen flex flex-col pt-[70px]">
@@ -41,23 +49,23 @@ export default function InternalSidebar({ activeTab, setActiveTab }: SidebarProp
       </div>
 
       <nav className="flex-1 p-4 space-y-2">
-        {menuItems.map(item => (
-          <button
-            key={item.id}
-            onClick={() => setActiveTab(item.id)}
-            className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all group ${
-              activeTab === item.id
-                ? "bg-sky-500 text-slate-950 font-bold shadow-[0_0_20px_rgba(56,189,248,0.2)]"
-                : "text-slate-400 hover:bg-white/5 hover:text-white"
-            }`}
-          >
-            <div className="flex items-center gap-3">
-              {item.icon}
-              <span className="text-sm">{item.label}</span>
-            </div>
-            {activeTab === item.id && <ChevronRight className="w-4 h-4" />}
-          </button>
-        ))}
+        {filteredNavItems.map((item) => {
+          const Icon = item.icon;
+          return (
+            <button
+              key={item.id}
+              onClick={() => setActiveTab(item.id)}
+              className={`w-full flex items-center gap-3 px-6 py-4 transition-all ${
+                activeTab === item.id 
+                  ? 'bg-sky-500/10 text-sky-400 border-r-2 border-sky-500' 
+                  : 'text-slate-500 hover:bg-white/5 hover:text-slate-300'
+              }`}
+            >
+              <Icon className="w-4 h-4" />
+              <span className="text-sm font-bold uppercase tracking-tight">{item.name}</span>
+            </button>
+          );
+        })}
       </nav>
 
       <div className="p-4 bg-slate-900/50 border-t border-white/5">

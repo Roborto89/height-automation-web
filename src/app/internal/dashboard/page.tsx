@@ -8,6 +8,7 @@ import TimeDashboard from '@/components/TimeDashboard';
 import BlogManager from '@/components/BlogManager';
 import MediaManager from '@/components/MediaManager';
 import Navbar from '@/components/Navbar';
+import UserManager from '@/components/UserManager';
 import { Loader2, ShieldAlert } from 'lucide-react';
 
 export default function DashboardPage() {
@@ -65,7 +66,7 @@ export default function DashboardPage() {
           </div>
         );
       default:
-        return <TimeDashboard user={user} />;
+        return <TimeDashboard user={user!} />;
     }
   };
 
