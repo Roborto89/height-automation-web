@@ -130,21 +130,15 @@ export const db = {
     return (data as MediaItem[]) || [];
   },
 
-  async addMedia(item: Omit<MediaItem, 'id'>) {
+  async addMedia(item: Omit<MediaItem, 'id'>, file?: File) {
     if (!supabase) return mockDb.addMedia(item);
-    const { data, error } = await supabase.from('media_assets').insert([item]).select().single();
-    return data;
-  },
 
-  async deleteMedia(id: string) {
-    if (!supabase) return mockDb.deleteMedia(id);
-    await supabase.from('media_assets').delete().eq('id', id);
-  },
-
-  // Media Storage Upload via Secure Backend API
-  async uploadMedia(file: File): Promise<string> {
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('title', item.title);
+    formData.append('category', item.category);
+    formData.append('type', item.type);
+    if (item.url) formData.append('url', item.url);
+    if (file) formData.append('file', file);
 
     const response = await fetch('/api/upload', {
       method: 'POST',
@@ -152,13 +146,17 @@ export const db = {
     });
 
     if (!response.ok) {
-      throw new Error(`Upload failed: ${response.statusText}`);
+      const errorData = await response.json();
+      throw new Error(errorData.error || `Action failed: ${response.statusText}`);
     }
 
     const result = await response.json();
-    if (result.error) throw new Error(result.error);
-    
-    return result.url;
+    return result.part;
+  },
+
+  async deleteMedia(id: string) {
+    if (!supabase) return mockDb.deleteMedia(id);
+    await supabase.from('media_assets').delete().eq('id', id);
   },
 
   // Newsletter

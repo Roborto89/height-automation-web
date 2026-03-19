@@ -42,15 +42,14 @@ export default function MediaManager() {
     if (!file && !url) return;
     
     setUploading(true);
-    let finalUrl = url;
     
     try {
-      if (file) {
-        finalUrl = await db.uploadMedia(file);
-      }
+      // The new unified addMedia handles both file uploading and DB insertion securely on the backend
+      const newItem = await db.addMedia({ title, url, type, category }, file || undefined);
       
-      const newItem = await db.addMedia({ title, url: finalUrl, type, category });
-      setMedia([newItem as any, ...media]); // Push to top of list visually
+      if (newItem) {
+        setMedia([newItem, ...media]); // Push to top of list visually
+      }
       
       // Reset form
       setTitle('');
@@ -58,8 +57,7 @@ export default function MediaManager() {
       setFile(null);
       if (fileInputRef.current) fileInputRef.current.value = '';
     } catch (err) {
-      console.error("Upload failed", err);
-      // Depending on error logging strategy, a toast notification would be ideal here.
+      console.error("Transmission failed:", err);
     } finally {
       setUploading(false);
     }
