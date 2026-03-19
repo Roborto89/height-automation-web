@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { db } from '@/lib/database';
 import { MediaItem } from '@/lib/mockDb';
-import { Image as ImageIcon, Film, Plus, Trash2, Link as LinkIcon, Camera, LayoutGrid } from 'lucide-react';
+import { Image as ImageIcon, Film, Plus, Trash2, Link as LinkIcon, Camera, LayoutGrid, UploadCloud, Loader2 } from 'lucide-react';
 
 export default function MediaManager() {
   const [media, setMedia] = useState<MediaItem[]>([]);
@@ -11,17 +11,58 @@ export default function MediaManager() {
   const [url, setUrl] = useState('');
   const [type, setType] = useState<'image' | 'video'>('image');
   const [category, setCategory] = useState<'ROBOTICS' | 'VISION' | 'SAFETY'>('ROBOTICS');
+  const [file, setFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     db.getMedia().then(setMedia);
   }, []);
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = e.target.files?.[0];
+    if (selected) {
+      setFile(selected);
+      // Auto-identify media type
+      if (selected.type.startsWith('video/')) {
+        setType('video');
+      } else {
+        setType('image');
+      }
+      
+      // Auto-fill title based on original filename if currently blank
+      if (!title) {
+        setTitle(selected.name.split('.')[0].replace(/[-_]/g, ' '));
+      }
+    }
+  };
+
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
-    const newItem = await db.addMedia({ title, url, type, category });
-    setMedia([...media, newItem as any]); // cast to bypass slight type diff if needed
-    setTitle('');
-    setUrl('');
+    if (!file && !url) return;
+    
+    setUploading(true);
+    let finalUrl = url;
+    
+    try {
+      if (file) {
+        finalUrl = await db.uploadMedia(file);
+      }
+      
+      const newItem = await db.addMedia({ title, url: finalUrl, type, category });
+      setMedia([newItem as any, ...media]); // Push to top of list visually
+      
+      // Reset form
+      setTitle('');
+      setUrl('');
+      setFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    } catch (err) {
+      console.error("Upload failed", err);
+      // Depending on error logging strategy, a toast notification would be ideal here.
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleDelete = async (id: string) => {
@@ -81,21 +122,31 @@ export default function MediaManager() {
               </div>
 
               <div className="space-y-1.5">
-                 <label className="text-[10px] uppercase font-black tracking-widest text-slate-500 ml-1">Source Link / Path</label>
+                 <label className="text-[10px] uppercase font-black tracking-widest text-slate-500 ml-1">Source File or Link</label>
+                 <div className="relative">
+                    <input 
+                       ref={fileInputRef}
+                       type="file"
+                       accept="image/*,video/*"
+                       onChange={handleFileChange}
+                       className="w-full bg-slate-950 border border-white/10 rounded-xl py-2 px-4 text-white focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-black file:uppercase file:tracking-widest file:bg-sky-500 file:text-slate-950 hover:file:bg-sky-400 cursor-pointer"
+                    />
+                 </div>
+                 <div className="text-center text-[10px] font-bold text-slate-500 uppercase tracking-widest py-2">- OR PROVIDE URL -</div>
                  <div className="relative">
                     <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600" />
                     <input 
                        value={url}
                        onChange={(e) => setUrl(e.target.value)}
-                       placeholder="/images/photo.png or YouTube URL"
+                       placeholder="External URL (if not uploading)"
                        className="w-full bg-slate-950 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all font-medium text-sm"
-                       required
                     />
                  </div>
               </div>
 
-              <button type="submit" className="w-full btn-primary h-14 font-black tracking-widest uppercase">
-                 Deploy Asset
+              <button disabled={uploading} type="submit" className="w-full btn-primary h-14 flex items-center justify-center gap-2 font-black tracking-widest uppercase disabled:opacity-50 disabled:cursor-not-allowed">
+                 {uploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <UploadCloud className="w-5 h-5" />}
+                 {uploading ? 'Transmitting...' : 'Deploy Asset'}
               </button>
            </form>
         </div>

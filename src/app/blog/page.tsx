@@ -23,10 +23,26 @@ export default function BlogPage() {
 
   const handleSubscribe = async () => {
     if (email) {
+      setLoading(true);
+      
+      // Save to Database (Mock/Supabase)
       await db.subscribe(email);
+      
+      // Attempt Email Send via Resend
+      try {
+        await fetch('/api/newsletter', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+      } catch (err) {
+        console.error("Email delivery skipped or failed:", err);
+      }
+
       setSubscribed(true);
       setEmail('');
-      setTimeout(() => setSubscribed(false), 3000);
+      setLoading(false);
+      setTimeout(() => setSubscribed(false), 5000);
     }
   };
 

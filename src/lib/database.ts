@@ -103,6 +103,26 @@ export const db = {
     await supabase.from('media_assets').delete().eq('id', id);
   },
 
+  // Media Storage Upload via Secure Backend API
+  async uploadMedia(file: File): Promise<string> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Upload failed: ${response.statusText}`);
+    }
+
+    const result = await response.json();
+    if (result.error) throw new Error(result.error);
+    
+    return result.url;
+  },
+
   // Newsletter
   async subscribe(email: string) {
     if (!supabase) return mockDb.subscribe(email);
