@@ -1,3 +1,5 @@
+"use client";
+
 import Navbar from "@/components/Navbar";
 import { ArrowRight, Bot, Shield, Eye, Settings, Zap, Users, Globe, Play, X, Trophy, Briefcase } from "lucide-react";
 import Link from "next/link";
