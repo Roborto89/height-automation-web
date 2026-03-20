@@ -58,7 +58,7 @@ export default function Home() {
                 { label: 'Systems Deployed', value: '120+', icon: Bot },
                 { label: 'Support Uptime', value: '24/7', icon: Settings },
                 { label: 'Safety Rating', value: '100%', icon: Shield },
-                { label: 'Global Reach', value: '15 COUNTRIES', icon: Globe }
+                { label: 'National Reach', value: 'COAST TO COAST', icon: Globe }
               ].map((stat, i) => (
                 <div key={i} className="px-8 space-y-1 group hover:bg-white/5 transition-colors cursor-default py-4 md:py-0">
                    <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-2">
@@ -189,12 +189,12 @@ export default function Home() {
            </div>
         </section>
 
-        {/* Global Insight Section */}
+        {/* Nationwide Insight Section */}
         <section className="py-32 px-6 bg-sky-500/[0.02]">
            <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-20 items-center">
               <div className="space-y-6">
                  <h2 className="text-4xl font-black font-display tracking-tight uppercase leading-[0.9]">Field <br /> Intelligence</h2>
-                 <p className="text-slate-400 text-lg">Detailed operation logs from our engineers deployed across the globe.</p>
+                 <p className="text-slate-400 text-lg">Detailed operation logs from our engineers deployed across the country.</p>
                  <Link href="/blog" className="btn-primary inline-flex items-center gap-2 group">
                    Visit Intel Hub
                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
