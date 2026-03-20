@@ -108,7 +108,9 @@ export const db = {
       content: p.content,
       category: p.category,
       publishedAt: p.published_at,
-      author: (p.profiles as any)?.name || 'Admin'
+      author: (p.profiles as any)?.name || 'Admin',
+      readTime: p.read_time || '5 MIN',
+      complexity: p.complexity || 'INTERMEDIATE'
     })) as BlogPost[]) || [];
   },
 
@@ -118,7 +120,9 @@ export const db = {
        title: post.title,
        content: post.content,
        category: post.category,
-       author_id: (post as any).authorId 
+       author_id: (post as any).authorId,
+       read_time: post.readTime,
+       complexity: post.complexity
     }]).select().single();
     return data;
   },

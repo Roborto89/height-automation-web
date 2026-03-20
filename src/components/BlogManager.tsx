@@ -9,6 +9,8 @@ export default function BlogManager() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [category, setCategory] = useState('ROBOTICS');
+  const [readTime, setReadTime] = useState('5 MIN');
+  const [complexity, setComplexity] = useState<'BASIC' | 'INTERMEDIATE' | 'ADVANCED' | 'ELITE'>('INTERMEDIATE');
   const [isPublishing, setIsPublishing] = useState(false);
   const [success, setSuccess] = useState(false);
   const [recentPosts, setRecentPosts] = useState<BlogPost[]>([]);
@@ -34,8 +36,8 @@ export default function BlogManager() {
         content,
         category,
         author: 'Admin',
-                readTime: '5 min',
-                complexity: 'INTERMEDIATE'
+        readTime,
+        complexity
       });
       
 
@@ -87,6 +89,31 @@ export default function BlogManager() {
                   <option value="VISION">VISION</option>
                   <option value="SAFETY">SAFETY</option>
                   <option value="AI">AI SYSTEMS</option>
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[10px] uppercase font-black tracking-widest text-slate-500">Read Time</label>
+                <input 
+                  value={readTime}
+                  onChange={(e) => setReadTime(e.target.value)}
+                  placeholder="e.g. 8 MIN"
+                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all font-bold"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[10px] uppercase font-black tracking-widest text-slate-500">Complexity</label>
+                <select 
+                  value={complexity}
+                  onChange={(e) => setComplexity(e.target.value as any)}
+                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all font-bold appearance-none"
+                >
+                  <option value="BASIC">BASIC</option>
+                  <option value="INTERMEDIATE">INTERMEDIATE</option>
+                  <option value="ADVANCED">ADVANCED</option>
+                  <option value="ELITE">ELITE</option>
                 </select>
               </div>
             </div>
