@@ -129,16 +129,34 @@ export default function Home() {
         </section>
 
         {/* Brand/Partner Marquee (Social Proof) */}
-        <section className="py-20 border-t border-white/5">
+        <section className="py-20 border-t border-white/5 overflow-hidden">
            <div className="max-w-7xl mx-auto px-6 text-center space-y-12">
               <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.4em]">Integrated with Industry Leaders</p>
-              <div className="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-30 grayscale hover:opacity-100 transition-opacity duration-700">
-                 {/* Mock Industrial Partner Logos */}
-                 <div className="text-3xl font-black text-white italic">FANUC</div>
-                 <div className="text-3xl font-black text-white">KEYENCE</div>
-                 <div className="text-3xl font-black text-white uppercase tracking-tighter">Cognex</div>
-                 <div className="text-3xl font-black text-white">ABB</div>
-                 <div className="text-3xl font-black text-white">SICK</div>
+              
+              <div className="flex flex-wrap justify-center items-center gap-12 md:gap-20 opacity-40 grayscale hover:opacity-100 transition-opacity duration-700">
+                 {/* Stylized Partner Logos - Mocking Brand Aesthetics */}
+                 <div className="text-3xl font-black text-[#FFD700] italic font-display flex items-center gap-0.5">
+                    FANUC
+                 </div>
+                 <div className="text-3xl font-black text-white tracking-tighter">
+                    KEY<span className="text-sky-500">ENCE</span>
+                 </div>
+                 <div className="text-2xl font-black text-white lowercase tracking-[-0.05em] flex items-center">
+                    cog<span>nex</span><span className="w-2 h-2 rounded-full bg-yellow-400 ml-0.5" />
+                 </div>
+                 <div className="text-4xl font-black text-[#FF0000] tracking-tighter">ABB</div>
+                 <div className="text-3xl font-[900] text-sky-400 uppercase tracking-tight">SICK</div>
+                 <div className="text-2xl font-black text-[#004e9a] uppercase flex flex-col items-center leading-none">
+                    <span className="text-xs tracking-[0.3em] font-normal text-white">YASKAWA</span>
+                 </div>
+                 <div className="text-3xl font-black text-[#ff6600] uppercase tracking-tighter">KUKA</div>
+                 <div className="flex flex-col items-start leading-none gap-0">
+                    <span className="text-lg font-bold text-white tracking-widest">Rockwell</span>
+                    <span className="text-[10px] font-black text-[#cd163f] uppercase tracking-tighter">Automation</span>
+                 </div>
+                 <div className="text-2xl font-black text-white italic tracking-tighter flex items-center gap-1">
+                    asyril <span className="w-3 h-3 bg-[#8dc63f] rounded-sm transform rotate-45" />
+                 </div>
               </div>
            </div>
         </section>
