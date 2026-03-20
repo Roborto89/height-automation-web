@@ -21,6 +21,8 @@ export interface BlogPost {
   category: string;
   publishedAt: string;
   author: string;
+  readTime: string;
+  complexity: 'BASIC' | 'INTERMEDIATE' | 'ADVANCED' | 'ELITE';
 }
 
 export interface NewsletterSubscriber {
@@ -45,7 +47,36 @@ const initialUsers: User[] = [
 ];
 
 const initialBlog: BlogPost[] = [
-  { id: '1', title: 'The Shift Toward Cobot Integration', content: '...', category: 'ROBOTICS', publishedAt: '2026-03-15T12:00:00Z', author: 'Admin' }
+  { 
+    id: '1', 
+    title: 'The Shift Toward Cobot Integration', 
+    content: 'As manufacturing landscapes evolve, the transition from traditional industrial robotics to Collaborative Robots (Cobots) is accelerating. This shift is driven by the need for flexible, safe, and easily deployable automation solutions that can work alongside human technicians without the need for extensive safety caging.', 
+    category: 'ROBOTICS', 
+    publishedAt: '2026-03-15T12:00:00Z', 
+    author: 'Chief Engineer',
+    readTime: '6 MIN',
+    complexity: 'INTERMEDIATE'
+  },
+  {
+    id: '2',
+    title: 'Sub-Micron Vision Inspection Protocols',
+    content: 'Achieving sub-micron accuracy in high-speed inspection requires more than just high-resolution sensors. It demands optimized lighting geometry, ultra-low-latency processing pipelines, and sophisticated calibration algorithms that account for thermal expansion of the mechanical fixtures.',
+    category: 'VISION',
+    publishedAt: '2026-03-18T09:30:00Z',
+    author: 'Vision Lead',
+    readTime: '12 MIN',
+    complexity: 'ELITE'
+  },
+  {
+    id: '3',
+    title: 'Safety PLC vs Standard Logic',
+    content: 'The fundamental difference between standard and safety-rated control systems lies in the hardware redundancy and self-diagnostic capabilities. In this breakdown, we explore why a Category 4 safety rating requires dual-channel logic and how to properly implement emergency stop circuits.',
+    category: 'SAFETY',
+    publishedAt: '2026-03-19T14:15:00Z',
+    author: 'Safety Dir',
+    readTime: '8 MIN',
+    complexity: 'ADVANCED'
+  }
 ];
 
 const initialMedia: MediaItem[] = [
