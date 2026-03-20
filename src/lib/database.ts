@@ -15,7 +15,31 @@ export const db = {
       console.error('Supabase Error:', error);
       return mockDb.getUsers();
     }
-    return data as User[];
+    return data.map(u => ({
+      id: u.id,
+      name: u.name,
+      email: u.email,
+      role: u.role,
+      active: u.active,
+      title: u.title,
+      bio: u.bio,
+      avatarUrl: u.avatar_url
+    })) as User[];
+  },
+
+  async updateUser(id: string, updates: Partial<User>) {
+    if (!supabase) return mockDb.updateUser(id, updates);
+    
+    const { error } = await supabase.from('profiles').update({
+       title: updates.title,
+       bio: updates.bio,
+       avatar_url: updates.avatarUrl,
+       name: updates.name,
+       role: updates.role,
+       active: updates.active
+    }).eq('id', id);
+    
+    if (error) throw error;
   },
 
   async getUserByEmail(email: string): Promise<User | undefined> {

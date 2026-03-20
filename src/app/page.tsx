@@ -1,12 +1,23 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import { db } from "@/lib/database";
+import { User } from "@/lib/mockDb";
 import Navbar from "@/components/Navbar";
 import { ArrowRight, Bot, Shield, Eye, Settings, Zap, Users, Globe, Play, X, Trophy, Briefcase } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
 
 export default function Home() {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
+  const [personnel, setPersonnel] = useState<User[]>([]);
+
+  useEffect(() => {
+    const loadPersonnel = async () => {
+      const data = await db.getUsers();
+      setPersonnel(data.filter(u => u.active && (u.role === 'ADMIN' || u.role === 'MANAGER')).slice(0, 1));
+    };
+    loadPersonnel();
+  }, []);
   return (
     <div className="min-h-screen bg-slate-950 overflow-x-hidden">
       <Navbar />
@@ -184,6 +195,24 @@ export default function Home() {
                        At Height Automation, we don't just sell software; we deploy veterans of industrial engineering. 
                        Our leadership team consists of specialists who have scaled factory floors from Detroit to Tokyo.
                     </p>
+                    
+                    {personnel.length > 0 && (
+                      <div className="glass p-6 bg-slate-900/40 border-white/5 space-y-4 animate-in fade-in duration-1000">
+                         <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 rounded-xl border border-white/10 overflow-hidden bg-slate-800">
+                               {personnel[0].avatarUrl ? <img src={personnel[0].avatarUrl} className="w-full h-full object-cover" alt={personnel[0].name} /> : <span className="flex items-center justify-center h-full text-sky-500 font-black">{personnel[0].name.charAt(0)}</span>}
+                            </div>
+                            <div>
+                               <p className="text-white font-bold">{personnel[0].name}</p>
+                               <p className="text-sky-500 text-[10px] font-black uppercase tracking-widest">{personnel[0].title}</p>
+                            </div>
+                         </div>
+                         <p className="text-slate-500 text-xs italic">"{personnel[0].bio?.slice(0, 120)}..."</p>
+                         <Link href="/about" className="inline-flex items-center gap-2 text-sky-400 text-[10px] font-black uppercase tracking-widest hover:text-white transition-colors">
+                            View Full Technical Registry <ArrowRight className="w-3 h-3" />
+                         </Link>
+                      </div>
+                    )}
                  </div>
                  
                  <div className="space-y-6">

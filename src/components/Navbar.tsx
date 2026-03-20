@@ -10,6 +10,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const links = [
+    { name: "About", href: "/about" },
     { name: "Quote Tool", href: "/quote" },
     { name: "Gallery", href: "/gallery" },
     { name: "Blog", href: "/blog" },

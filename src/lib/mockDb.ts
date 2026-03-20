@@ -4,6 +4,9 @@ export interface User {
   email: string;
   role: 'ADMIN' | 'MANAGER' | 'EMPLOYEE';
   active: boolean;
+  title?: string;
+  bio?: string;
+  avatarUrl?: string;
 }
 
 export interface TimeEntry {
@@ -42,8 +45,26 @@ export interface MediaItem {
 const STORAGE_KEY = 'height_internal_db';
 
 const initialUsers: User[] = [
-  { id: '1', name: 'Admin User', email: 'admin@heightauto.com', role: 'ADMIN', active: true },
-  { id: '2', name: 'John Doe', email: 'j.doe@heightauto.com', role: 'EMPLOYEE', active: true }
+  { 
+    id: '1', 
+    name: 'Admin User', 
+    email: 'admin@heightauto.com', 
+    role: 'ADMIN', 
+    active: true,
+    title: 'Chief Technical Officer',
+    bio: 'Veteran of industrial robotics with 15+ years of experience in multi-axis system integration and safety fail-safe logic.',
+    avatarUrl: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=200'
+  },
+  { 
+    id: '2', 
+    name: 'John Doe', 
+    email: 'j.doe@heightauto.com', 
+    role: 'EMPLOYEE', 
+    active: true,
+    title: 'Senior Vision Architect',
+    bio: 'Specialist in high-speed metrology and sub-micron inspection systems for aerospace and medical manufacturing.',
+    avatarUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=200'
+  }
 ];
 
 const initialBlog: BlogPost[] = [
@@ -112,6 +133,15 @@ export const mockDb = {
 
   getUserByEmail(email: string): User | undefined {
     return this.getUsers().find(u => u.email === email);
+  },
+
+  updateUser(id: string, updates: Partial<User>) {
+    const data = this.getData();
+    const index = data.users.findIndex((u: User) => u.id === id);
+    if (index !== -1) {
+      data.users[index] = { ...data.users[index], ...updates };
+      this.saveData(data);
+    }
   },
 
   getTimeEntries(userId: string): TimeEntry[] {
