@@ -35,7 +35,8 @@ export default function BlogManager() {
         category,
         author: 'Admin',
                 readTime: '5 min',
-                complexity: 'Intermediate'
+                complexity: 'IntermediaTE'
+      });
       });
 
       setSuccess(true);
