@@ -33,7 +33,9 @@ export default function BlogManager() {
         title,
         content,
         category,
-        author: 'Admin'
+        author: 'Admin',
+                readTime: '5 min',
+                complexity: 'Intermediate'
       });
 
       setSuccess(true);
