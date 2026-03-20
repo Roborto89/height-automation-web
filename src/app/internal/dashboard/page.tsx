@@ -15,6 +15,7 @@ export default function DashboardPage() {
   const { user, isLoading } = useAuth();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('time');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -71,12 +72,40 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="flex h-screen bg-slate-950 overflow-hidden">
+    <div className="flex h-screen bg-slate-950 overflow-hidden relative">
       <Navbar />
-      <InternalSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-      <main className="flex-1 overflow-y-auto pt-[70px]">
+      
+      {/* Mobile Sidebar Toggle - Only visible on small screens when sidebar is closed */}
+      {!isSidebarOpen && (
+        <button 
+          onClick={() => setIsSidebarOpen(true)}
+          className="md:hidden fixed bottom-6 right-6 z-40 bg-sky-500 text-slate-950 p-4 rounded-full shadow-2xl shadow-sky-500/20 animate-in zoom-in duration-300"
+        >
+          <Loader2 className={`w-6 h-6 ${isLoading ? 'animate-spin' : ''}`} />
+        </button>
+      )}
+
+      <InternalSidebar 
+        activeTab={activeTab} 
+        setActiveTab={(tab) => {
+          setActiveTab(tab);
+          setIsSidebarOpen(false); // Close on selection on mobile
+        }} 
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+      />
+
+      <main className="flex-1 overflow-y-auto pt-[70px] px-4 md:px-0">
         {renderContent()}
       </main>
+
+      {/* Backdrop for mobile */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-30 md:hidden animate-in fade-in duration-300"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
     </div>
   );
 }

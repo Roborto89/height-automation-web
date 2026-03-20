@@ -64,7 +64,7 @@ export default function TimeDashboard({ user }: { user: User }) {
 
   if (loading) {
     return (
-      <div className="p-10 flex flex-col items-center justify-center min-h-[400px] gap-4">
+      <div className="p-4 md:p-10 flex flex-col items-center justify-center min-h-[400px] gap-4">
         <Loader2 className="w-8 h-8 text-sky-500 animate-spin" />
         <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">Syncing shift data...</p>
       </div>
@@ -72,7 +72,7 @@ export default function TimeDashboard({ user }: { user: User }) {
   }
 
   return (
-    <div className="p-10 space-y-10 animate-in fade-in duration-700">
+    <div className="p-4 md:p-10 space-y-8 md:space-y-10 animate-in fade-in duration-700">
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="space-y-1">
           <h1 className="text-3xl font-black font-display tracking-tight uppercase text-white">Time <span className="text-sky-400">Command</span></h1>
@@ -99,17 +99,17 @@ export default function TimeDashboard({ user }: { user: User }) {
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-8">
         {/* Main Terminal */}
-        <div className="glass relative overflow-hidden bg-slate-900/40 p-10 flex flex-col items-center justify-center text-center space-y-8 min-h-[450px]">
+        <div className="glass relative overflow-hidden bg-slate-900/40 p-6 md:p-10 flex flex-col items-center justify-center text-center space-y-8 min-h-[400px] md:min-h-[450px]">
           {activeEntry ? (
-            <div className="space-y-6 animate-in zoom-in-95 duration-500">
+            <div className="space-y-6 animate-in zoom-in-95 duration-500 w-full max-w-sm">
               <div className="relative">
                 <div className="absolute inset-0 bg-sky-500/20 blur-3xl rounded-full" />
                 <div className="relative w-24 h-24 bg-sky-500/10 rounded-full border-2 border-sky-500/50 flex items-center justify-center mx-auto shadow-2xl shadow-sky-500/20">
                   <Loader2 className="w-10 h-10 text-sky-400 animate-spin-slow" />
                 </div>
               </div>
-              <div className="space-y-2">
-                <h2 className="text-5xl font-black font-display tracking-tighter uppercase italic">Active <span className="text-sky-400">Shift</span></h2>
+              <div className="space-y-2 text-center">
+                <h2 className="text-3xl md:text-5xl font-black font-display tracking-tighter uppercase italic">Active <span className="text-sky-400">Shift</span></h2>
                 <p className="text-slate-400 font-mono text-sm tracking-widest">TRANSMISSION ESTABLISHED SINCE {new Date(activeEntry.clockInAt).toLocaleTimeString()}</p>
               </div>
               <button 
@@ -126,10 +126,10 @@ export default function TimeDashboard({ user }: { user: User }) {
                <div className="w-20 h-20 bg-slate-950 rounded-3xl border border-white/5 flex items-center justify-center mx-auto mb-4">
                   <Clock className="w-8 h-8 text-slate-800" />
                </div>
-               <div className="space-y-2">
-                 <h2 className="text-5xl font-black font-display tracking-tighter uppercase opacity-40">System <span className="text-slate-700">Standby</span></h2>
-                 <p className="text-slate-600 font-bold uppercase tracking-[0.3em] text-[10px]">No Active Link Detected</p>
-               </div>
+                <div className="space-y-2 text-center">
+                  <h2 className="text-3xl md:text-5xl font-black font-display tracking-tighter uppercase opacity-40">System <span className="text-slate-700">Standby</span></h2>
+                  <p className="text-slate-600 font-bold uppercase tracking-[0.2em] text-[8px] md:text-[10px]">No Active Link Detected</p>
+                </div>
                
                <div className="max-w-xs mx-auto space-y-4">
                   <div className="relative group">

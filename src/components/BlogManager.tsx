@@ -52,14 +52,14 @@ export default function BlogManager() {
   };
 
   return (
-    <div className="p-10 space-y-10 animate-in fade-in duration-700">
+    <div className="p-4 md:p-10 space-y-8 md:space-y-10 animate-in fade-in duration-700">
       <header className="space-y-1">
         <h1 className="text-3xl font-black font-display tracking-tight uppercase text-white">Content <span className="text-sky-400">Terminal</span></h1>
         <p className="text-slate-500 text-sm font-medium tracking-wide">Publish project updates and notify the customer base.</p>
       </header>
 
       <div className="grid grid-cols-1 xl:grid-cols-[1fr_400px] gap-8">
-        <div className="glass p-8 bg-slate-900/30 border-white/5">
+        <div className="glass p-6 md:p-8 bg-slate-900/30 border-white/5">
           <form onSubmit={handlePublish} className="space-y-6">
             <div className="space-y-2">
               <label className="text-[10px] uppercase font-black tracking-widest text-slate-500">Post Title</label>

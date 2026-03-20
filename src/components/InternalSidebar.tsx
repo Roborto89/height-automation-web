@@ -17,9 +17,11 @@ import {
 interface SidebarProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
-export default function InternalSidebar({ activeTab, setActiveTab }: SidebarProps) {
+export default function InternalSidebar({ activeTab, setActiveTab, isOpen, onClose }: SidebarProps) {
   const { user, logout } = useAuth();
 
   // Replaced menuItems with navItems and updated structure
@@ -43,9 +45,21 @@ export default function InternalSidebar({ activeTab, setActiveTab }: SidebarProp
   });
 
   return (
-    <div className="w-64 bg-slate-900 border-r border-white/5 h-screen flex flex-col pt-[70px]">
-      <div className="p-6 border-b border-white/5">
+    <div className={`
+      fixed md:relative z-40 w-64 bg-slate-900 border-r border-white/5 h-screen flex flex-col pt-[70px]
+      transition-transform duration-300 ease-in-out
+      ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+    `}>
+      <div className="p-6 border-b border-white/5 flex items-center justify-between">
         <h2 className="text-xs font-black text-slate-500 uppercase tracking-widest">Internal Terminal</h2>
+        {onClose && (
+          <button 
+            onClick={onClose}
+            className="md:hidden p-1 text-slate-500 hover:text-white transition-colors"
+          >
+            <ChevronRight className="w-4 h-4 rotate-180" />
+          </button>
+        )}
       </div>
 
       <nav className="flex-1 p-4 space-y-2">

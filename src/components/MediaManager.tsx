@@ -69,7 +69,7 @@ export default function MediaManager() {
   };
 
   return (
-    <div className="p-10 space-y-10 animate-in fade-in duration-700">
+    <div className="p-4 md:p-10 space-y-8 md:space-y-10 animate-in fade-in duration-700">
       <header className="space-y-1">
         <h1 className="text-3xl font-black font-display tracking-tight uppercase text-white">Visual <span className="text-sky-400">Assets</span></h1>
         <p className="text-slate-500 text-sm font-medium tracking-wide">Manage project imagery and video deployments for the public gallery.</p>
@@ -77,7 +77,7 @@ export default function MediaManager() {
 
       <div className="grid grid-cols-1 xl:grid-cols-[400px_1fr] gap-8 items-start">
         {/* Add Media Form */}
-        <div className="glass p-8 bg-slate-900/30 space-y-6 sticky top-24">
+        <div className="glass p-6 md:p-8 bg-slate-900/30 space-y-6 xl:sticky xl:top-24">
            <h3 className="text-xs font-black uppercase tracking-widest text-sky-400 flex items-center gap-2">
               <Plus className="w-3 h-3" /> Register New Asset
            </h3>
