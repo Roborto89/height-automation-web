@@ -18,6 +18,8 @@ export const metadata: Metadata = {
   description: "Advanced robotic automation and custom engineering solutions.",
 };
 
+import Footer from "@/components/Footer";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -27,7 +29,12 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body className={`${inter.variable} ${outfit.variable} antialiased font-sans bg-slate-950 text-white`}>
         <AuthProvider>
-          {children}
+          <div className="flex flex-col min-h-screen">
+            <main className="flex-grow">
+              {children}
+            </main>
+            <Footer />
+          </div>
         </AuthProvider>
       </body>
     </html>

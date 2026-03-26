@@ -130,9 +130,12 @@ export default function Home() {
                       <p className="text-slate-400 text-sm leading-relaxed translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
                          {service.desc}
                       </p>
-                      <button className="text-[10px] font-black text-sky-400 uppercase tracking-widest pt-4 flex items-center gap-2 group-hover:translate-x-2 transition-transform">
+                      <Link 
+                        href={service.title === 'Robotic Integration' ? "/quote" : service.title === 'Machine Vision' ? "/gallery" : "/quote"}
+                        className="text-[10px] font-black text-sky-400 uppercase tracking-widest pt-4 flex items-center gap-2 group-hover:translate-x-2 transition-transform"
+                      >
                          Explore Tech <ArrowRight className="w-3 h-3" />
-                      </button>
+                      </Link>
                    </div>
                 </div>
               ))}
@@ -258,9 +261,9 @@ export default function Home() {
                          <span className="text-[10px] font-mono text-slate-600 uppercase">{post.date}</span>
                       </div>
                       <h3 className="text-xl font-bold group-hover:text-sky-400 transition-colors">{post.title}</h3>
-                      <button className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                      <Link href="/blog" className="text-[10px] font-black text-sky-400 uppercase tracking-widest flex items-center gap-2 group-hover:translate-x-1 transition-all">
                         Read Log <ArrowRight className="w-3 h-3" />
-                      </button>
+                      </Link>
                    </div>
                  ))}
               </div>
@@ -282,7 +285,7 @@ export default function Home() {
               
               {/* Actual Video Embed - Using a high-quality industrial reel placeholder */}
               <iframe 
-                src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" // Placeholder video (Rick Roll for dev, or a real industry clip) 
+                src="https://www.youtube.com/embed/5m1O_Y22H1k?autoplay=1" // Professional Industrial Automation Placeholder
                 title="Height Automation Corporate Reel"
                 className="w-full h-full border-0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
