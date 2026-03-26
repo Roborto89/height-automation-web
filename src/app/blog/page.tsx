@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { db } from "@/lib/database";
 import { BlogPost } from "@/lib/mockDb";
 import { ArrowRight, BookOpen, Newspaper, Lightbulb, Clock, Hexagon, Mail, ShieldCheck } from "lucide-react";
+import Link from "next/link";
 
 export default function BlogPage() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -132,9 +133,9 @@ export default function BlogPage() {
                            </div>
                            <span className="text-[10px] font-black uppercase tracking-widest text-slate-600">{post.author}</span>
                         </div>
-                        <button className="flex items-center gap-2 text-sky-500 font-black uppercase tracking-[0.2em] text-[10px] group/btn">
+                        <Link href={`/blog/${post.id}`} className="flex items-center gap-2 text-sky-500 font-black uppercase tracking-[0.2em] text-[10px] group/btn">
                            Deploy Full Brief <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-2 transition-transform" />
-                        </button>
+                        </Link>
                      </div>
                   </div>
                </div>

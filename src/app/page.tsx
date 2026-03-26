@@ -252,8 +252,8 @@ export default function Home() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 ring-1 ring-white/5 p-8 rounded-3xl bg-slate-900/10">
                  {[
-                   { date: 'MAR 15', title: 'Advancing Collaborative Welding', category: 'ROBOTICS' },
-                   { date: 'MAR 10', title: 'High-Speed Quality Assurance', category: 'VISION' }
+                   { id: '1', date: 'MAR 15', title: 'Advancing Collaborative Welding', category: 'ROBOTICS' },
+                   { id: '2', date: 'MAR 10', title: 'High-Speed Quality Assurance', category: 'VISION' }
                  ].map((post, i) => (
                    <div key={i} className="glass p-8 space-y-4 hover:bg-white/5 transition-all cursor-pointer group">
                       <div className="flex justify-between items-center">
@@ -261,7 +261,7 @@ export default function Home() {
                          <span className="text-[10px] font-mono text-slate-600 uppercase">{post.date}</span>
                       </div>
                       <h3 className="text-xl font-bold group-hover:text-sky-400 transition-colors">{post.title}</h3>
-                      <Link href="/blog" className="text-[10px] font-black text-sky-400 uppercase tracking-widest flex items-center gap-2 group-hover:translate-x-1 transition-all">
+                      <Link href={`/blog/${post.id}`} className="text-[10px] font-black text-sky-400 uppercase tracking-widest flex items-center gap-2 group-hover:translate-x-1 transition-all">
                         Read Log <ArrowRight className="w-3 h-3" />
                       </Link>
                    </div>

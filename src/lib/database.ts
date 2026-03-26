@@ -138,6 +138,22 @@ export const db = {
     })) as BlogPost[]) || [];
   },
 
+  async getBlogPostById(id: string): Promise<BlogPost | undefined> {
+    if (!supabase) return mockDb.getBlogPosts().find(p => p.id === id);
+    const { data, error } = await supabase.from('blog_posts').select('*, profiles(name)').eq('id', id).single();
+    if (error || !data) return undefined;
+    return {
+      id: data.id,
+      title: data.title,
+      content: data.content,
+      category: data.category,
+      publishedAt: data.published_at,
+      author: (data.profiles as any)?.name || 'Admin',
+      readTime: data.read_time || '5 MIN',
+      complexity: data.complexity || 'INTERMEDIATE'
+    } as BlogPost;
+  },
+
   async addBlogPost(post: Omit<BlogPost, 'id' | 'publishedAt'>) {
     if (!supabase) return mockDb.addBlogPost(post as any);
     const { data, error } = await supabase.from('blog_posts').insert([{
