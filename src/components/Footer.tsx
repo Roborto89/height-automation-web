@@ -98,22 +98,26 @@ export default function Footer() {
                <span className="text-[10px] font-black uppercase tracking-widest">Channel Secured</span>
             </div>
           ) : (
-            <div className="flex gap-2">
+            <form 
+              onSubmit={(e) => { e.preventDefault(); handleSubscribe(); }}
+              className="flex gap-2"
+            >
               <input 
                 type="email" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Engineering Email" 
+                required
                 className="bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-sm w-full focus:outline-none focus:border-sky-500/50 transition-colors text-white"
               />
               <button 
-                onClick={handleSubscribe}
+                type="submit"
                 disabled={isSubscribing}
-                className="bg-sky-500 hover:bg-sky-400 text-slate-950 font-black text-[10px] uppercase tracking-widest px-4 py-2 rounded-lg transition-all disabled:opacity-50"
+                className="shrink-0 bg-sky-500 hover:bg-sky-400 text-slate-950 font-black text-[10px] uppercase tracking-widest px-4 py-2 rounded-lg transition-all disabled:opacity-50 min-w-[60px]"
               >
                 {isSubscribing ? <Loader2 className="w-3 h-3 animate-spin mx-auto" /> : "Join"}
               </button>
-            </div>
+            </form>
           )}
         </div>
       </div>

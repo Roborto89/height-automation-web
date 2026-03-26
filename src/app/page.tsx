@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { db } from "@/lib/database";
-import { User } from "@/lib/mockDb";
+import { User, BlogPost } from "@/lib/mockDb";
 import Navbar from "@/components/Navbar";
 import { ArrowRight, Bot, Shield, Eye, Settings, Zap, Users, Globe, Play, X, Trophy, Briefcase } from "lucide-react";
 import Link from "next/link";
@@ -10,13 +10,17 @@ import Link from "next/link";
 export default function Home() {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
   const [personnel, setPersonnel] = useState<User[]>([]);
+  const [latestPosts, setLatestPosts] = useState<BlogPost[]>([]);
 
   useEffect(() => {
-    const loadPersonnel = async () => {
-      const data = await db.getUsers();
-      setPersonnel(data.filter(u => u.active && (u.role === 'ADMIN' || u.role === 'MANAGER')).slice(0, 1));
+    const loadData = async () => {
+      const userData = await db.getUsers();
+      setPersonnel(userData.filter(u => u.active && (u.role === 'ADMIN' || u.role === 'MANAGER')).slice(0, 1));
+      
+      const postData = await db.getBlogPosts();
+      setLatestPosts(postData.slice(0, 2));
     };
-    loadPersonnel();
+    loadData();
   }, []);
   return (
     <div className="min-h-screen bg-slate-950 overflow-x-hidden">
@@ -251,21 +255,25 @@ export default function Home() {
                  </Link>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 ring-1 ring-white/5 p-8 rounded-3xl bg-slate-900/10">
-                 {[
-                   { id: '1', date: 'MAR 15', title: 'Advancing Collaborative Welding', category: 'ROBOTICS' },
-                   { id: '2', date: 'MAR 10', title: 'High-Speed Quality Assurance', category: 'VISION' }
-                 ].map((post, i) => (
-                   <div key={i} className="glass p-8 space-y-4 hover:bg-white/5 transition-all cursor-pointer group">
-                      <div className="flex justify-between items-center">
-                         <span className="text-[10px] font-black text-sky-500 uppercase tracking-widest">{post.category}</span>
-                         <span className="text-[10px] font-mono text-slate-600 uppercase">{post.date}</span>
-                      </div>
-                      <h3 className="text-xl font-bold group-hover:text-sky-400 transition-colors">{post.title}</h3>
-                      <Link href={`/blog/${post.id}`} className="text-[10px] font-black text-sky-400 uppercase tracking-widest flex items-center gap-2 group-hover:translate-x-1 transition-all">
-                        Read Log <ArrowRight className="w-3 h-3" />
-                      </Link>
-                   </div>
-                 ))}
+                 {latestPosts.map((post) => (
+                    <div key={post.id} className="glass p-8 space-y-4 hover:bg-white/5 transition-all cursor-pointer group">
+                       <div className="flex justify-between items-center">
+                          <span className="text-[10px] font-black text-sky-500 uppercase tracking-widest">{post.category}</span>
+                          <span className="text-[10px] font-mono text-slate-600 uppercase">
+                            {new Date(post.publishedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }).toUpperCase()}
+                          </span>
+                       </div>
+                       <h3 className="text-xl font-bold group-hover:text-sky-400 transition-colors">{post.title}</h3>
+                       <Link href={`/blog/${post.id}`} className="text-[10px] font-black text-sky-400 uppercase tracking-widest flex items-center gap-2 group-hover:translate-x-1 transition-all">
+                         Read Log <ArrowRight className="w-3 h-3" />
+                       </Link>
+                    </div>
+                  ))}
+                  {latestPosts.length === 0 && (
+                    <div className="col-span-full py-10 text-center opacity-20">
+                       <p className="text-[10px] font-black uppercase tracking-widest">No Intelligence Logs Available</p>
+                    </div>
+                  )}
               </div>
            </div>
         </section>
