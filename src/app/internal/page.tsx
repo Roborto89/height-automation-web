@@ -62,7 +62,7 @@ export default function InternalLogin() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full bg-slate-900 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all font-medium"
-                  placeholder="name@heightauto.com"
+                  placeholder="name@heightautomation.com"
                   required
                 />
               </div>

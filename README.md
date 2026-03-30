@@ -23,7 +23,7 @@ To enable cloud synchronization, add the following to your deployment:
 
 ## 🛠 Internal Portal
 Access the administration suite at `/internal`.
-- **Admin Login**: `admin@heightauto.com`
+- **Admin Login**: `joshsmith@heightautomation.com`
 - **Default Password**: (Stored in your secure vault)
 
 ---

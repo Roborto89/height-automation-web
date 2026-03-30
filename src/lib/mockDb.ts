@@ -47,8 +47,8 @@ const STORAGE_KEY = 'height_internal_db';
 const initialUsers: User[] = [
   { 
     id: '1', 
-    name: 'Admin User', 
-    email: 'admin@heightauto.com', 
+    name: 'Josh Smith', 
+    email: 'joshsmith@heightautomation.com', 
     role: 'ADMIN', 
     active: true,
     title: 'Chief Technical Officer',
@@ -58,7 +58,7 @@ const initialUsers: User[] = [
   { 
     id: '2', 
     name: 'John Doe', 
-    email: 'j.doe@heightauto.com', 
+    email: 'j.doe@heightautomation.com', 
     role: 'EMPLOYEE', 
     active: true,
     title: 'Senior Vision Architect',

@@ -72,7 +72,7 @@ export const db = {
     if (!user) return { success: false, message: 'Invalid credentials. Access denied.' };
     
     if (user.active) {
-       if (email === 'admin@heightauto.com' && password !== 'AdminPassword123!') {
+       if (email === 'joshsmith@heightautomation.com' && password !== 'TheLordIsGood1!') {
          return { success: false, message: 'Invalid Administrative credentials.' };
        }
        return { success: true, user };
