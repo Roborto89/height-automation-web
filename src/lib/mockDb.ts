@@ -4,6 +4,7 @@ export interface User {
   email: string;
   role: 'ADMIN' | 'MANAGER' | 'EMPLOYEE';
   active: boolean;
+  mustChangePassword: boolean;
   title?: string;
   bio?: string;
   avatarUrl?: string;
@@ -43,6 +44,7 @@ export interface MediaItem {
 }
 
 const STORAGE_KEY = 'height_internal_db';
+const PASS_KEY = 'height_internal_pass';
 
 const initialUsers: User[] = [
   { 
@@ -51,19 +53,37 @@ const initialUsers: User[] = [
     email: 'joshsmith@heightautomation.com', 
     role: 'ADMIN', 
     active: true,
+    mustChangePassword: true,
     title: 'Chief Technical Officer',
     bio: 'Veteran of industrial robotics with 15+ years of experience in multi-axis system integration and safety fail-safe logic.',
     avatarUrl: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=200'
   },
   { 
     id: '2', 
-    name: 'John Doe', 
-    email: 'j.doe@heightautomation.com', 
+    name: 'Shane Humphries', 
+    email: 'Shanehumphries@heightautomation.com', 
     role: 'EMPLOYEE', 
     active: true,
-    title: 'Senior Vision Architect',
-    bio: 'Specialist in high-speed metrology and sub-micron inspection systems for aerospace and medical manufacturing.',
-    avatarUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=200'
+    mustChangePassword: true,
+    title: 'Field Integration Specialist'
+  },
+  { 
+    id: '3', 
+    name: 'Justin Micallef', 
+    email: 'justinmicallef@heightautomation.com', 
+    role: 'EMPLOYEE', 
+    active: true,
+    mustChangePassword: true,
+    title: 'Vision Systems Engineer'
+  },
+  { 
+    id: '4', 
+    name: 'Baylin Wehmeir', 
+    email: 'baylinwehmeir@heightautomation.com', 
+    role: 'EMPLOYEE', 
+    active: true,
+    mustChangePassword: true,
+    title: 'Automation Technician'
   }
 ];
 
@@ -125,6 +145,16 @@ export const mockDb = {
 
   saveData(data: any) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  },
+
+  getPasswords() {
+    if (typeof window === 'undefined') return {};
+    const data = localStorage.getItem(PASS_KEY);
+    return data ? JSON.parse(data) : { 'joshsmith@heightautomation.com': 'Welcome1!' };
+  },
+
+  savePasswords(passwords: any) {
+    localStorage.setItem(PASS_KEY, JSON.stringify(passwords));
   },
 
   getUsers(): User[] {
@@ -228,5 +258,17 @@ export const mockDb = {
     const data = this.getData();
     data.media = (data.media || []).filter((m: MediaItem) => m.id !== id);
     this.saveData(data);
+  },
+
+  validatePassword(email: string, password?: string): boolean {
+    const passwords = this.getPasswords();
+    const storedPass = passwords[email] || 'Welcome1!'; // Default for anyone not in the pass DB
+    return password === storedPass;
+  },
+
+  updatePassword(email: string, newPassword: string) {
+    const passwords = this.getPasswords();
+    passwords[email] = newPassword;
+    this.savePasswords(passwords);
   }
 };

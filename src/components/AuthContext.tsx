@@ -8,6 +8,7 @@ interface AuthContextType {
   user: User | null;
   login: (email: string, password?: string) => Promise<{ success: boolean; message?: string }>;
   logout: () => void;
+  updatePassword: (password: string) => Promise<{ success: boolean; message?: string }>;
   isLoading: boolean;
 }
 
@@ -33,7 +34,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(result.user);
         localStorage.setItem('height_user', JSON.stringify(result.user));
         setIsLoading(false);
-        return { success: true };
+        return { success: true, user: result.user };
       }
       setIsLoading(false);
       return { success: false, message: result.message };
@@ -49,8 +50,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem('height_user');
   };
 
+  const updatePassword = async (password: string) => {
+    try {
+      if (user) {
+        await db.updatePassword(user.id, user.email, password);
+        const updatedUser = { ...user, mustChangePassword: false };
+        setUser(updatedUser);
+        localStorage.setItem('height_user', JSON.stringify(updatedUser));
+      }
+      return { success: true };
+    } catch (err: any) {
+      return { success: false, message: err.message || "Failed to update password." };
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, login, logout, updatePassword, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

@@ -21,6 +21,7 @@ export const db = {
       email: u.email,
       role: u.role,
       active: u.active,
+      mustChangePassword: u.must_change_password ?? true,
       title: u.title,
       bio: u.bio,
       avatarUrl: u.avatar_url
@@ -46,7 +47,17 @@ export const db = {
     if (!supabase) return mockDb.getUserByEmail(email);
     const { data, error } = await supabase.from('profiles').select('*').eq('email', email).single();
     if (error) return mockDb.getUserByEmail(email);
-    return data as User;
+    return {
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      role: data.role,
+      active: data.active,
+      mustChangePassword: data.must_change_password ?? true,
+      title: data.title,
+      bio: data.bio,
+      avatarUrl: data.avatar_url
+    } as User;
   },
 
   async authenticate(email: string, password?: string): Promise<{ success: boolean; user?: User; message?: string }> {
@@ -72,8 +83,9 @@ export const db = {
     if (!user) return { success: false, message: 'Invalid credentials. Access denied.' };
     
     if (user.active) {
-       if (email === 'joshsmith@heightautomation.com' && password !== 'TheLordIsGood1!') {
-         return { success: false, message: 'Invalid Administrative credentials.' };
+       const isValid = mockDb.validatePassword(email, password);
+       if (!isValid) {
+         return { success: false, message: 'Correct authorization required.' };
        }
        return { success: true, user };
     }
@@ -214,5 +226,25 @@ export const db = {
     if (!supabase) return mockDb.getSubscribers();
     const { data, error } = await supabase.from('subscribers').select('*');
     return (data as NewsletterSubscriber[]) || [];
+  },
+
+  async updatePassword(userId: string, email: string, password: string) {
+    if (!supabase) {
+       // Mock Mode Persistence
+       mockDb.updateUser(userId, { mustChangePassword: false });
+       mockDb.updatePassword(email, password);
+       return { success: true };
+    }
+    
+    const { error } = await supabase.auth.updateUser({
+       password: password
+    });
+    
+    if (error) throw error;
+
+    // Update must_change_password to false in profiles
+    await supabase.from('profiles').update({ must_change_password: false }).eq('id', userId);
+    
+    return { success: true };
   }
 };

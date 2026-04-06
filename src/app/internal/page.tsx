@@ -20,7 +20,12 @@ export default function InternalLogin() {
 
     const result = await login(email, password);
     if (result.success) {
-      router.push('/internal/dashboard');
+      const user = (result as any).user;
+      if (user?.mustChangePassword) {
+        router.push('/internal/change-password');
+      } else {
+        router.push('/internal/dashboard');
+      }
     } else {
       setError(result.message || "Authentication failed");
       setLoading(false);
