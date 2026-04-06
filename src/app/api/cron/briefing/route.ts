@@ -78,7 +78,7 @@ export async function GET(request: Request) {
           'Authorization': `Bearer ${resendKey}`
         },
         body: JSON.stringify({
-          from: 'Operations Terminal <terminal@heightautomation.com>',
+          from: 'onboarding@resend.dev',
           to: user.email,
           subject: `Morning Briefing: ${userTasks.length} Assigned Tasks`,
           html: html
