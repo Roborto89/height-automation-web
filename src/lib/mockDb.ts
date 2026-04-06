@@ -50,6 +50,7 @@ export interface CalendarEvent {
   startDate: string;
   endDate?: string;
   type: 'MILESTONE' | 'TASK' | 'DEADLINE';
+  assignedTo?: string; // UUID of assigned profile
   createdBy?: string;
   createdAt: string;
 }

@@ -25,6 +25,7 @@ interface CalendarManagerProps {
 export default function CalendarManager({ user }: CalendarManagerProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [events, setEvents] = useState<CalendarEvent[]>([]);
+  const [personnel, setPersonnel] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   
@@ -33,10 +34,12 @@ export default function CalendarManager({ user }: CalendarManagerProps) {
   const [newDesc, setNewDesc] = useState('');
   const [newType, setNewType] = useState<'MILESTONE' | 'TASK' | 'DEADLINE'>('TASK');
   const [newDate, setNewDate] = useState('');
+  const [newAssignee, setNewAssignee] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     fetchEvents();
+    fetchPersonnel();
   }, []);
 
   const fetchEvents = async () => {
@@ -51,6 +54,15 @@ export default function CalendarManager({ user }: CalendarManagerProps) {
     }
   };
 
+  const fetchPersonnel = async () => {
+    try {
+      const data = await db.getUsers();
+      setPersonnel(data);
+    } catch (error) {
+      console.error('Failed to fetch personnel:', error);
+    }
+  };
+
   const handleAddEvent = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newTitle || !newDate) return;
@@ -62,12 +74,14 @@ export default function CalendarManager({ user }: CalendarManagerProps) {
         description: newDesc,
         startDate: new Date(newDate).toISOString(),
         type: newType,
+        assignedTo: newAssignee || undefined,
         createdBy: user.id
       });
       
       setNewTitle('');
       setNewDesc('');
       setNewDate('');
+      setNewAssignee('');
       setIsModalOpen(false);
       fetchEvents();
     } catch (error) {
@@ -136,7 +150,13 @@ export default function CalendarManager({ user }: CalendarManagerProps) {
               >
                 {event.type === 'MILESTONE' && <Trophy className="w-2.5 h-2.5" />}
                 {event.type === 'DEADLINE' && <AlertCircle className="w-2.5 h-2.5" />}
-                <span className="truncate uppercase tracking-tighter">{event.title}</span>
+                <span className="truncate uppercase tracking-tighter flex-1">{event.title}</span>
+                
+                {event.assignedTo && (
+                  <div className="flex items-center justify-center w-4 h-4 rounded-full bg-white/20 text-[7px] font-black shrink-0 border border-white/10" title={`Assigned: ${personnel.find(p => p.id === event.assignedTo)?.name || 'Team'}`}>
+                    {personnel.find(p => p.id === event.assignedTo)?.name.split(' ').map(n => n[0]).join('') || '?'}
+                  </div>
+                )}
                 
                 {(user.role === 'ADMIN' || user.role === 'MANAGER') && (
                   <button 
@@ -291,6 +311,20 @@ export default function CalendarManager({ user }: CalendarManagerProps) {
                     <option value="DEADLINE">PROJECT DEADLINE</option>
                   </select>
                 </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Assign To Personnel</label>
+                <select 
+                  value={newAssignee}
+                  onChange={(e) => setNewAssignee(e.target.value)}
+                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-6 py-4 text-sm font-bold text-white focus:outline-none focus:border-sky-500 transition-all shadow-inner appearance-none uppercase tracking-widest"
+                >
+                  <option value="">COMMUNAL / UNASSIGNED</option>
+                  {personnel.filter(p => p.active).map(p => (
+                    <option key={p.id} value={p.id}>{p.name} ({p.role})</option>
+                  ))}
+                </select>
               </div>
 
               <div className="space-y-2">

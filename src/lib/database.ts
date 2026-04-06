@@ -285,6 +285,7 @@ export const db = {
       startDate: e.start_date,
       endDate: e.end_date,
       type: e.type,
+      assignedTo: e.assigned_to,
       createdBy: e.created_by,
       createdAt: e.created_at
     })) as CalendarEvent[]) || [];
@@ -298,6 +299,7 @@ export const db = {
       start_date: event.startDate,
       end_date: event.endDate,
       type: event.type,
+      assigned_to: event.assignedTo,
       created_by: event.createdBy
     }]).select().single();
     if (error) throw error;
