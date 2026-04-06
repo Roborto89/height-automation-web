@@ -20,6 +20,8 @@ export default function DashboardPage() {
   useEffect(() => {
     if (!isLoading && !user) {
       router.push('/internal');
+    } else if (!isLoading && user?.mustChangePassword) {
+      router.push('/internal/change-password');
     }
   }, [user, isLoading, router]);
 
@@ -43,17 +45,7 @@ export default function DashboardPage() {
       case 'media':
         return <MediaManager />;
       case 'users':
-        return (
-          <div className="p-10 space-y-4 animate-in fade-in duration-500">
-            <h1 className="text-3xl font-black font-display tracking-tight uppercase">User <span className="text-sky-400">Management</span></h1>
-            <div className="glass p-12 flex flex-col items-center justify-center text-center bg-slate-900/30 space-y-4 border-dashed">
-               <ShieldAlert className="w-12 h-12 text-slate-700" />
-               <p className="text-slate-500 max-w-sm">
-                 The User Management module is currently being optimized for the cloud environment. Check back soon for full RBAC controls.
-               </p>
-            </div>
-          </div>
-        );
+        return <UserManager />;
       case 'reports':
         return (
           <div className="p-10 space-y-4 animate-in fade-in duration-500">
