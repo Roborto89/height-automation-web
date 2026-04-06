@@ -246,5 +246,30 @@ export const db = {
     await supabase.from('profiles').update({ must_change_password: false }).eq('id', userId);
     
     return { success: true };
+  },
+
+  async resetUserPassword(targetUserId: string, newPassword: string) {
+    if (!supabase) {
+       // Mock Mode Reset
+       mockDb.updateUser(targetUserId, { mustChangePassword: true });
+       return { success: true };
+    }
+
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) throw new Error('Authentication required for administrative tasks.');
+
+    const response = await fetch('/api/admin/reset-password', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session.access_token}`
+      },
+      body: JSON.stringify({ targetUserId, newPassword })
+    });
+
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || 'Administrative action failed');
+
+    return result;
   }
 };

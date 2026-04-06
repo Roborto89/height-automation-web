@@ -194,6 +194,47 @@ export default function UserManager() {
                   />
                 </div>
 
+                <div className="pt-6 border-t border-white/5 space-y-4">
+                   <div className="flex items-center gap-2 mb-2">
+                     <Shield className="w-4 h-4 text-sky-400" />
+                     <h3 className="text-xs font-black uppercase tracking-widest text-white">Security & Access Control</h3>
+                   </div>
+                   
+                   <div className="flex gap-4">
+                     <div className="flex-1 space-y-2">
+                       <label className="text-[10px] uppercase font-black tracking-widest text-slate-500">New Temporary Password</label>
+                       <input 
+                         type="text"
+                         id="temp-password"
+                         placeholder="e.g. Height2026!"
+                         className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all font-bold text-xs"
+                       />
+                     </div>
+                     <button 
+                       type="button"
+                       onClick={async () => {
+                         const input = document.getElementById('temp-password') as HTMLInputElement;
+                         if (!input.value) return alert('Please enter a temporary password.');
+                         
+                         setIsUpdating(editingProfile.id);
+                         try {
+                           await db.resetUserPassword(editingProfile.id, input.value);
+                           alert(`Security reset successful! ${editingProfile.name} will be forced to update their password on next login.`);
+                           input.value = '';
+                         } catch (err: any) {
+                           alert(err.message || 'Security reset failed');
+                         } finally {
+                           setIsUpdating(null);
+                         }
+                       }}
+                       disabled={isUpdating === editingProfile.id}
+                       className="self-end px-6 h-[46px] rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-400 font-bold hover:bg-sky-500 hover:text-slate-950 transition-all text-xs"
+                     >
+                       RESET ACCESS
+                     </button>
+                   </div>
+                </div>
+
                 <div className="flex gap-4 pt-4">
                   <button 
                     type="submit" 
