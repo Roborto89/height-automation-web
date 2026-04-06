@@ -44,8 +44,9 @@ export const db = {
   },
 
   async getUserByEmail(email: string): Promise<User | undefined> {
-    if (!supabase) return mockDb.getUserByEmail(email);
-    const { data, error } = await supabase.from('profiles').select('*').eq('email', email).single();
+    const cleanEmail = email.toLowerCase();
+    if (!supabase) return mockDb.getUserByEmail(cleanEmail);
+    const { data, error } = await supabase.from('profiles').select('*').eq('email', cleanEmail).single();
     if (error) return mockDb.getUserByEmail(email);
     return {
       id: data.id,

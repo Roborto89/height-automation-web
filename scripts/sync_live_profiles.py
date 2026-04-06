@@ -43,11 +43,12 @@ def sync_profiles():
             continue
 
         user_id = target['id']
-        print(f"\nSynchronizing: {req['email']} ({user_id})")
+        email = req['email'].lower()
+        print(f"\nSynchronizing: {email} ({user_id})")
 
         profile_data = {
             "id": user_id,
-            "email": req['email'],
+            "email": email,
             "name": req['name'],
             "role": req['role'],
             "must_change_password": True,
@@ -62,20 +63,20 @@ def sync_profiles():
         res = requests.post(profile_url, headers=upsert_headers, json=profile_data)
         
         if res.status_code in [200, 201, 204]:
-            print(f"Successfully synchronized profile for {req['email']}")
+            print(f"Successfully synchronized profile for {email}")
         else:
             # Try without must_change_password if first attempt fails
             print(f"Initial sync failed ({res.status_code}), retrying without security flags...")
             minimal_data = {
                 "id": user_id,
-                "email": req['email'],
+                "email": email,
                 "name": req['name'],
                 "role": req['role'],
                 "active": True
             }
             res_min = requests.post(profile_url, headers=upsert_headers, json=minimal_data)
             if res_min.status_code in [200, 201, 204]:
-                print(f"Successfully synchronized minimal profile for {req['email']}")
+                print(f"Successfully synchronized minimal profile for {email}")
             else:
                  # Last resort: PATCH
                  patch_url = f"{SUPABASE_URL}/rest/v1/profiles?id=eq.{user_id}"
