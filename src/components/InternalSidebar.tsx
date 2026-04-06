@@ -11,7 +11,8 @@ import {
   FileText,
   TrendingUp,
   Image,
-  LayoutDashboard
+  LayoutDashboard,
+  Calendar
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -27,6 +28,7 @@ export default function InternalSidebar({ activeTab, setActiveTab, isOpen, onClo
   // Replaced menuItems with navItems and updated structure
   const navItems = [
     { name: 'Time Tracking', icon: Clock, id: 'time' },
+    { name: 'Project Calendar', icon: Calendar, id: 'calendar' },
     { name: 'My Timesheets', icon: FileText, id: 'timesheets' },
     { name: 'Manage Users', icon: Users, id: 'users' },
     { name: 'Blog Manager', icon: PenTool, id: 'blog' },
@@ -39,8 +41,8 @@ export default function InternalSidebar({ activeTab, setActiveTab, isOpen, onClo
     if (user?.role === 'ADMIN') {
       return true; // Admin sees all items
     } else {
-      // Non-admin users only see 'Time Tracking' and 'My Timesheets'
-      return item.id === 'time' || item.id === 'timesheets';
+      // Non-admin users see 'Time Tracking', 'Project Calendar', and 'My Timesheets'
+      return item.id === 'time' || item.id === 'timesheets' || item.id === 'calendar';
     }
   });
 

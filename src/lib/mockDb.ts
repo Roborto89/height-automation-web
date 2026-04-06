@@ -43,6 +43,17 @@ export interface MediaItem {
   category: 'ROBOTICS' | 'VISION' | 'SAFETY';
 }
 
+export interface CalendarEvent {
+  id: string;
+  title: string;
+  description?: string;
+  startDate: string;
+  endDate?: string;
+  type: 'MILESTONE' | 'TASK' | 'DEADLINE';
+  createdBy?: string;
+  createdAt: string;
+}
+
 const STORAGE_KEY = 'height_internal_db';
 const PASS_KEY = 'height_internal_pass';
 
@@ -127,7 +138,7 @@ const initialMedia: MediaItem[] = [
 
 export const mockDb = {
   getData() {
-    if (typeof window === 'undefined') return { users: [], entries: [], blog: [], subscribers: [], media: [] };
+    if (typeof window === 'undefined') return { users: [], entries: [], blog: [], subscribers: [], media: [], events: [] };
     const data = localStorage.getItem(STORAGE_KEY);
     if (!data) {
       const initial = { 
@@ -135,7 +146,8 @@ export const mockDb = {
         entries: [], 
         blog: initialBlog, 
         subscribers: [], 
-        media: initialMedia 
+        media: initialMedia,
+        events: []
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(initial));
       return initial;
@@ -270,5 +282,29 @@ export const mockDb = {
     const passwords = this.getPasswords();
     passwords[email] = newPassword;
     this.savePasswords(passwords);
+  },
+
+  // Calendar
+  getCalendarEvents(): CalendarEvent[] {
+    return this.getData().events || [];
+  },
+
+  addCalendarEvent(event: Omit<CalendarEvent, 'id' | 'createdAt'>) {
+    const data = this.getData();
+    const newEvent: CalendarEvent = {
+      ...event,
+      id: Math.random().toString(36).substr(2, 9),
+      createdAt: new Date().toISOString()
+    };
+    data.events = data.events || [];
+    data.events.push(newEvent);
+    this.saveData(data);
+    return newEvent;
+  },
+
+  deleteCalendarEvent(id: string) {
+    const data = this.getData();
+    data.events = (data.events || []).filter((e: CalendarEvent) => e.id !== id);
+    this.saveData(data);
   }
 };

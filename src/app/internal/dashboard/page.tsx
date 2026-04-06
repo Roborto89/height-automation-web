@@ -9,6 +9,7 @@ import BlogManager from '@/components/BlogManager';
 import MediaManager from '@/components/MediaManager';
 import Navbar from '@/components/Navbar';
 import UserManager from '@/components/UserManager';
+import CalendarManager from '@/components/CalendarManager';
 import { Loader2, ShieldAlert } from 'lucide-react';
 
 export default function DashboardPage() {
@@ -40,6 +41,8 @@ export default function DashboardPage() {
     switch (activeTab) {
       case 'time':
         return <TimeDashboard user={user} />;
+      case 'calendar':
+        return <CalendarManager user={user} />;
       case 'blog':
         return <BlogManager />;
       case 'media':

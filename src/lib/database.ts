@@ -1,5 +1,5 @@
 import { supabase } from './supabase';
-import { mockDb, User, TimeEntry, BlogPost, MediaItem, NewsletterSubscriber } from './mockDb';
+import { mockDb, User, TimeEntry, BlogPost, MediaItem, NewsletterSubscriber, CalendarEvent } from './mockDb';
 
 // This utility ensures a seamless transition from Prototype (mockDb) to Production (Supabase).
 // If NEXT_PUBLIC_SUPABASE_URL is not set, it falls back to LocalStorage automatically.
@@ -272,5 +272,41 @@ export const db = {
     if (!response.ok) throw new Error(result.error || 'Administrative action failed');
 
     return result;
+  },
+
+  // Project Calendar
+  async getCalendarEvents(): Promise<CalendarEvent[]> {
+    if (!supabase) return mockDb.getCalendarEvents();
+    const { data, error } = await supabase.from('calendar_events').select('*').order('start_date', { ascending: true });
+    return (data?.map(e => ({
+      id: e.id,
+      title: e.title,
+      description: e.description,
+      startDate: e.start_date,
+      endDate: e.end_date,
+      type: e.type,
+      createdBy: e.created_by,
+      createdAt: e.created_at
+    })) as CalendarEvent[]) || [];
+  },
+
+  async addCalendarEvent(event: Omit<CalendarEvent, 'id' | 'createdAt'>) {
+    if (!supabase) return mockDb.addCalendarEvent(event);
+    const { data, error } = await supabase.from('calendar_events').insert([{
+      title: event.title,
+      description: event.description,
+      start_date: event.startDate,
+      end_date: event.endDate,
+      type: event.type,
+      created_by: event.createdBy
+    }]).select().single();
+    if (error) throw error;
+    return data;
+  },
+
+  async deleteCalendarEvent(id: string) {
+    if (!supabase) return mockDb.deleteCalendarEvent(id);
+    const { error } = await supabase.from('calendar_events').delete().eq('id', id);
+    if (error) throw error;
   }
 };
