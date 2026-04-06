@@ -19,6 +19,14 @@ export default function MediaManager() {
     db.getMedia().then(setMedia);
   }, []);
 
+  const getYouTubeId = (url: string) => {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+  };
+
+  const isYouTube = (url: string) => !!getYouTubeId(url);
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0];
     if (selected) {
@@ -163,22 +171,33 @@ export default function MediaManager() {
                  <div key={item.id} className="glass group relative aspect-[4/3] bg-slate-900/50 overflow-hidden border-white/5 hover:border-sky-500/30 transition-all">
                     {/* Real Media Rendering */}
                     <div className="absolute inset-0 w-full h-full">
-                       {item.type === 'video' ? (
-                          <video 
-                            src={item.url} 
-                            className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity" 
-                            muted 
-                            loop 
-                            onMouseOver={(e) => e.currentTarget.play()}
-                            onMouseOut={(e) => e.currentTarget.pause()}
-                          />
-                       ) : (
-                          <img 
-                            src={item.url} 
-                            alt={item.title} 
-                            className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity" 
-                          />
-                       )}
+                        {item.type === 'video' ? (
+                           isYouTube(item.url) ? (
+                              <div className="w-full h-full pointer-events-none opacity-60 group-hover:opacity-100 transition-opacity">
+                                <iframe 
+                                  src={`https://www.youtube.com/embed/${getYouTubeId(item.url)}?controls=0&modestbranding=1&rel=0&autoplay=1&mute=1&playlist=${getYouTubeId(item.url)}&loop=1`}
+                                  className="w-full h-[150%] -translate-y-[17%] aspect-video object-cover"
+                                  frameBorder="0"
+                                  allow="autoplay; encrypted-media; gyroscope; picture-in-picture"
+                                />
+                              </div>
+                           ) : (
+                              <video 
+                                src={item.url} 
+                                className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity" 
+                                muted 
+                                loop 
+                                onMouseOver={(e) => e.currentTarget.play()}
+                                onMouseOut={(e) => e.currentTarget.pause()}
+                              />
+                           )
+                        ) : (
+                           <img 
+                             src={item.url} 
+                             alt={item.title} 
+                             className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity" 
+                           />
+                        )}
                        
                        {/* Overlay Icon for Type Identification if opacity is low */}
                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-white/10 group-hover:text-transparent transition-colors">
