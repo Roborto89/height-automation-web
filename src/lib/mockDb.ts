@@ -43,6 +43,14 @@ export interface MediaItem {
   category: 'ROBOTICS' | 'VISION' | 'SAFETY';
 }
 
+export interface Project {
+  id: string;
+  name: string;
+  description?: string;
+  status: 'ACTIVE' | 'ARCHIVED';
+  createdAt: string;
+}
+
 export interface CalendarEvent {
   id: string;
   title: string;
@@ -50,7 +58,12 @@ export interface CalendarEvent {
   startDate: string;
   endDate?: string;
   type: 'MILESTONE' | 'TASK' | 'DEADLINE';
-  assignedTo?: string; // UUID of assigned profile
+  status: 'PENDING' | 'COMPLETED' | 'VERIFIED';
+  assignedTo?: string;
+  projectId?: string;
+  completedAt?: string;
+  verifiedAt?: string;
+  verifiedBy?: string;
   createdBy?: string;
   createdAt: string;
 }
@@ -132,6 +145,12 @@ const initialBlog: BlogPost[] = [
   }
 ];
 
+const initialProjects: Project[] = [
+  { id: '8063334e-8a8a-41df-9cdd-213144e74207', name: 'General Operations', description: 'Standard fleet timeline and industrial maintenance.', status: 'ACTIVE', createdAt: new Date().toISOString() },
+  { id: 'project-vision-01', name: 'Vision Upgrade Phase 2', description: 'Sub-micron inspection cell overhaul.', status: 'ACTIVE', createdAt: new Date().toISOString() },
+  { id: 'project-robot-04', name: 'Robotic Cell 04 Go-Live', description: 'Testing and integration of the Fanuc fleet.', status: 'ACTIVE', createdAt: new Date().toISOString() }
+];
+
 const initialMedia: MediaItem[] = [
   { id: '1', type: 'image', title: 'Automotive Inspection Cell', url: '/images/robotic_cell_inspection.png', category: 'ROBOTICS' },
   { id: '2', type: 'image', title: 'Precision PCB Assembly', url: '/images/vision_system_precision.png', category: 'VISION' }
@@ -148,6 +167,7 @@ export const mockDb = {
         blog: initialBlog, 
         subscribers: [], 
         media: initialMedia,
+        projects: initialProjects,
         events: []
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(initial));
@@ -303,9 +323,45 @@ export const mockDb = {
     return newEvent;
   },
 
+  updateCalendarEvent(id: string, updates: Partial<CalendarEvent>) {
+    const data = this.getData();
+    data.events = data.events.map((e: CalendarEvent) => 
+      e.id === id ? { ...e, ...updates } : e
+    );
+    this.saveData(data);
+  },
+
   deleteCalendarEvent(id: string) {
     const data = this.getData();
     data.events = (data.events || []).filter((e: CalendarEvent) => e.id !== id);
+    this.saveData(data);
+  },
+
+  // Projects
+  getProjects(): Project[] {
+    return this.getData().projects || [];
+  },
+
+  getProjectById(id: string): Project | undefined {
+    return this.getProjects().find(p => p.id === id);
+  },
+
+  addProject(project: Omit<Project, 'id' | 'createdAt'>) {
+    const data = this.getData();
+    const newProject: Project = {
+      ...project,
+      id: Math.random().toString(36).substr(2, 9),
+      createdAt: new Date().toISOString()
+    };
+    data.projects = data.projects || [];
+    data.projects.push(newProject);
+    this.saveData(data);
+    return newProject;
+  },
+
+  deleteProject(id: string) {
+    const data = this.getData();
+    data.projects = (data.projects || []).filter((p: Project) => p.id !== id);
     this.saveData(data);
   }
 };

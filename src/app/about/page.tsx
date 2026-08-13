@@ -43,9 +43,9 @@ export default function AboutPage() {
            </h1>
            
            <p className="text-slate-400 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-medium animate-in fade-in slide-in-from-bottom-12 duration-700">
-             At Height Automation, our advantage isn't just code—it's decades of collective 
-             experience on the world's most complex factory floors. Meet the architects 
-             of industrial autonomy.
+             At Height Automation, we combine decades of industrial systems engineering with 
+             precision contract manufacturing capabilities. From structural blueprint to production line, 
+             we deliver end-to-end operational capacity.
            </p>
         </section>
 
@@ -126,17 +126,15 @@ export default function AboutPage() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 relative z-10">
                  <div className="space-y-8">
                     <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter leading-none">
-                      Scaling <br /><span className="text-sky-400">Veteran Capability</span>
+                      Integrated Engineering & <br /><span className="text-emerald-400">Precision Production</span>
                     </h2>
-                    <p className="text-slate-400 text-lg leading-relaxed">
-                      Height Automation was founded on the principle that industrial problems 
-                      require industrial experience. We don't just provision systems—we 
-                      deploy the most rigorous engineering standards in the nation.
+                    <p className="text-slate-400 text-lg leading-relaxed font-medium">
+                      Height Automation was founded on the principle that industrial automation and contract manufacturing belong under one roof. We combine veteran systems integration engineering with high-capacity production facilities to deliver turnkey, high-availability solutions.
                     </p>
                     <div className="flex flex-col gap-6 pt-4">
                        {[
-                         { icon: Trophy, title: 'Award Winning Infrastructure', desc: 'Consistently recognized for safety and integration efficiency since 2012.' },
-                         { icon: Globe, title: 'National Deployment Framework', desc: 'Proprietary remote support layer with 24/7 on-site emergency capabilities.' }
+                         { icon: Trophy, title: 'AS9100 & ISO 9001 Compliant', desc: 'Maintaining rigorous quality standards for aerospace, medical, and industrial electronics assemblies.' },
+                         { icon: Globe, title: 'Turnkey Contract Manufacturing', desc: 'Equipped with SMT lines, CNC milling centers, sheet metal laser cutting, and dedicated electromechanical box-build bays.' }
                        ].map((item, i) => (
                          <div key={i} className="flex gap-4">
                             <div className="shrink-0 w-10 h-10 rounded-xl bg-sky-500/10 flex items-center justify-center text-sky-400 border border-sky-500/20">
@@ -153,20 +151,20 @@ export default function AboutPage() {
                  
                  <div className="grid grid-cols-2 gap-4">
                     <div className="glass bg-white/5 border-white/5 p-8 flex flex-col justify-center gap-2">
-                       <p className="text-4xl font-black text-sky-400">150+</p>
-                       <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Complex Cells Deployed</p>
+                       <p className="text-4xl font-black text-sky-400">120+</p>
+                       <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Systems Deployed</p>
+                    </div>
+                    <div className="glass bg-white/5 border-white/5 p-8 flex flex-col justify-center gap-2 mt-8">
+                       <p className="text-4xl font-black text-emerald-400">50k Sq Ft</p>
+                       <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Active Facility Capacity</p>
+                    </div>
+                    <div className="glass bg-white/5 border-white/5 p-8 flex flex-col justify-center gap-2">
+                       <p className="text-4xl font-black text-emerald-400">99.8%</p>
+                       <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">On-Time Delivery (OTD)</p>
                     </div>
                     <div className="glass bg-white/5 border-white/5 p-8 flex flex-col justify-center gap-2 mt-8">
                        <p className="text-4xl font-black text-sky-400">24/7</p>
-                       <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Active System Support</p>
-                    </div>
-                    <div className="glass bg-white/5 border-white/5 p-8 flex flex-col justify-center gap-2">
-                       <p className="text-4xl font-black text-sky-400">100%</p>
-                       <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Safety Compliance Record</p>
-                    </div>
-                    <div className="glass bg-white/5 border-white/5 p-8 flex flex-col justify-center gap-2 mt-8">
-                       <p className="text-4xl font-black text-sky-400">98%</p>
-                       <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Customer Retention</p>
+                       <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Technical Support Coverage</p>
                     </div>
                  </div>
               </div>

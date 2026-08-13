@@ -1,5 +1,5 @@
 import { supabase } from './supabase';
-import { mockDb, User, TimeEntry, BlogPost, MediaItem, NewsletterSubscriber, CalendarEvent } from './mockDb';
+import { mockDb, User, TimeEntry, BlogPost, MediaItem, NewsletterSubscriber, CalendarEvent, Project } from './mockDb';
 
 // This utility ensures a seamless transition from Prototype (mockDb) to Production (Supabase).
 // If NEXT_PUBLIC_SUPABASE_URL is not set, it falls back to LocalStorage automatically.
@@ -12,8 +12,8 @@ export const db = {
     if (!supabase) return mockDb.getUsers();
     const { data, error } = await supabase.from('profiles').select('*');
     if (error) {
-      console.error('Supabase Error:', error);
-      return mockDb.getUsers();
+      console.error('[DATABASE_CRITICAL] Supabase profile fetch failed:', error);
+      return [];
     }
     return data.map(u => ({
       id: u.id,
@@ -47,7 +47,10 @@ export const db = {
     const cleanEmail = email.toLowerCase();
     if (!supabase) return mockDb.getUserByEmail(cleanEmail);
     const { data, error } = await supabase.from('profiles').select('*').eq('email', cleanEmail).single();
-    if (error) return mockDb.getUserByEmail(email);
+    if (error) {
+       console.warn(`[DATABASE_AUTH] Profile lookup failed for ${cleanEmail}:`, error.message);
+       return undefined;
+    }
     return {
       id: data.id,
       name: data.name,
@@ -73,24 +76,27 @@ export const db = {
       }
 
       const user = await this.getUserByEmail(email);
-      if (!user) return { success: false, message: 'Profile not found.' };
-      if (!user.active) return { success: false, message: 'Account deactivated.' };
+      if (!user) return { success: false, message: 'Profile not found. Terminal clearance required.' };
+      if (!user.active) return { success: false, message: 'Account deactivated. Contact system admin.' };
 
       return { success: true, user };
     }
 
-    // Fallback for local prototyping
-    const user = await this.getUserByEmail(email);
-    if (!user) return { success: false, message: 'Invalid credentials. Access denied.' };
-    
-    if (user.active) {
-       const isValid = mockDb.validatePassword(email, password);
-       if (!isValid) {
-         return { success: false, message: 'Correct authorization required.' };
-       }
-       return { success: true, user };
+    // FALLBACK: Local Simulation only
+    if (!supabase) {
+      const user = await this.getUserByEmail(email);
+      if (!user) return { success: false, message: 'Invalid credentials. Access denied.' };
+      
+      if (user.active) {
+         const isValid = mockDb.validatePassword(email, password);
+         if (!isValid) {
+           return { success: false, message: 'Correct authorization required.' };
+         }
+         return { success: true, user };
+      }
     }
-    return { success: false, message: 'Authentication failure.' };
+    
+    return { success: false, message: 'Authentication failure. Account access restricted.' };
   },
 
   // Time Entries
@@ -275,9 +281,15 @@ export const db = {
   },
 
   // Project Calendar
-  async getCalendarEvents(): Promise<CalendarEvent[]> {
+  async getCalendarEvents(projectId?: string): Promise<CalendarEvent[]> {
     if (!supabase) return mockDb.getCalendarEvents();
-    const { data, error } = await supabase.from('calendar_events').select('*').order('start_date', { ascending: true });
+    
+    let query = supabase.from('calendar_events').select('*').order('start_date', { ascending: true });
+    if (projectId) {
+      query = query.eq('project_id', projectId);
+    }
+    
+    const { data, error } = await query;
     return (data?.map(e => ({
       id: e.id,
       title: e.title,
@@ -285,7 +297,12 @@ export const db = {
       startDate: e.start_date,
       endDate: e.end_date,
       type: e.type,
+      status: e.status,
       assignedTo: e.assigned_to,
+      projectId: e.project_id,
+      completedAt: e.completed_at,
+      verifiedAt: e.verified_at,
+      verifiedBy: e.verified_by,
       createdBy: e.created_by,
       createdAt: e.created_at
     })) as CalendarEvent[]) || [];
@@ -299,9 +316,60 @@ export const db = {
       start_date: event.startDate,
       end_date: event.endDate,
       type: event.type,
+      status: event.status || 'PENDING',
       assigned_to: event.assignedTo,
+      project_id: event.projectId,
       created_by: event.createdBy
     }]).select().single();
+    if (error) throw error;
+    return data;
+  },
+
+  async updateCalendarEvent(id: string, updates: Partial<CalendarEvent>) {
+    if (!supabase) return mockDb.updateCalendarEvent(id, updates);
+    
+    const payload: any = {
+      title: updates.title,
+      description: updates.description,
+      start_date: updates.startDate,
+      end_date: updates.endDate,
+      type: updates.type,
+      status: updates.status,
+      assigned_to: updates.assignedTo,
+      project_id: updates.projectId
+    };
+
+    // Clean up undefined fields
+    Object.keys(payload).forEach(key => payload[key] === undefined && delete payload[key]);
+
+    const { data, error } = await supabase
+      .from('calendar_events')
+      .update(payload)
+      .eq('id', id)
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return data;
+  },
+
+  async updateCalendarEventStatus(id: string, status: CalendarEvent['status'], adminId?: string) {
+    if (!supabase) return mockDb.updateCalendarEvent(id, { status });
+    
+    const update: any = { status };
+    if (status === 'COMPLETED') update.completed_at = new Date().toISOString();
+    if (status === 'VERIFIED') {
+      update.verified_at = new Date().toISOString();
+      update.verified_by = adminId;
+    }
+
+    const { data, error } = await supabase
+      .from('calendar_events')
+      .update(update)
+      .eq('id', id)
+      .select()
+      .single();
+    
     if (error) throw error;
     return data;
   },
@@ -309,6 +377,37 @@ export const db = {
   async deleteCalendarEvent(id: string) {
     if (!supabase) return mockDb.deleteCalendarEvent(id);
     const { error } = await supabase.from('calendar_events').delete().eq('id', id);
+    if (error) throw error;
+  },
+
+  // Projects
+  async getProjects(): Promise<Project[]> {
+    if (!supabase) return mockDb.getProjects();
+    const { data, error } = await supabase.from('projects').select('*').order('name', { ascending: true });
+    if (error) throw error;
+    return data.map(p => ({
+      id: p.id,
+      name: p.name,
+      description: p.description,
+      status: p.status,
+      createdAt: p.created_at
+    })) as Project[];
+  },
+
+  async addProject(project: Omit<Project, 'id' | 'createdAt'>) {
+    if (!supabase) return mockDb.addProject(project);
+    const { data, error } = await supabase.from('projects').insert([{
+      name: project.name,
+      description: project.description,
+      status: project.status || 'ACTIVE'
+    }]).select().single();
+    if (error) throw error;
+    return data;
+  },
+
+  async deleteProject(id: string) {
+    if (!supabase) return mockDb.deleteProject(id);
+    const { error } = await supabase.from('projects').delete().eq('id', id);
     if (error) throw error;
   }
 };

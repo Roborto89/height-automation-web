@@ -36,8 +36,8 @@ export default function Footer() {
             <span>HEIGHT <span className="text-sky-400">AUTOMATION</span></span>
           </Link>
           <p className="text-slate-400 text-sm leading-relaxed max-w-xs font-medium">
-            Engineering high-availability robotic integration and custom machine vision 
-            for the world's most demanding industrial environments.
+            Engineering high-availability systems integration, custom machine vision,
+            and precision contract manufacturing for the world's most demanding industrial environments.
           </p>
           <div className="flex items-center gap-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-400 text-[10px] font-black uppercase tracking-[0.2em]">

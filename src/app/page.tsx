@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { db } from "@/lib/database";
 import { User, BlogPost } from "@/lib/mockDb";
 import Navbar from "@/components/Navbar";
-import { ArrowRight, Bot, Shield, Eye, Settings, Zap, Users, Globe, Play, X, Trophy, Briefcase } from "lucide-react";
+import { ArrowRight, Bot, Shield, Eye, Settings, Zap, Users, Globe, Play, X, Trophy, Briefcase, Cpu, Wrench } from "lucide-react";
 import Link from "next/link";
 
 export default function Home() {
@@ -38,16 +38,16 @@ export default function Home() {
                <Zap className="w-3 h-3" /> System Status: Operational
             </div>
             
-            <h1 className="text-5xl md:text-8xl font-black tracking-tighter font-display leading-[0.9]">
-              ENGINEERING <br />
+            <h1 className="text-5xl md:text-8xl font-black tracking-tighter font-display leading-[0.9] uppercase">
+              Systems Integration <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-sky-300 to-emerald-400">
-                INDUSTRIAL SCALE
+                & CONTRACT MANUFACTURING
               </span>
             </h1>
             
-            <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed font-medium">
-              Height Automation provides mission-critical robotic integration and 
-              custom machine vision for the world's most demanding environments.
+            <p className="text-lg md:text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed font-medium">
+              Height Automation provides mission-critical robotic integration, custom machine vision,
+              and high-fidelity contract manufacturing for the world's most demanding industrial applications.
             </p>
             
             <div className="flex flex-wrap items-center justify-center gap-6 pt-6">
@@ -71,9 +71,9 @@ export default function Home() {
            <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 divide-x divide-white/5 py-10">
               {[
                 { label: 'Systems Deployed', value: '120+', icon: Bot },
-                { label: 'Support Uptime', value: '24/7', icon: Settings },
-                { label: 'Safety Rating', value: '100%', icon: Shield },
-                { label: 'National Reach', value: 'COAST TO COAST', icon: Globe }
+                { label: 'Manufacturing Floor', value: '50k SQ FT', icon: Settings },
+                { label: 'Quality Standard', value: 'ISO 9001', icon: Shield },
+                { label: 'Delivery Rate', value: '99.8% OTD', icon: Globe }
               ].map((stat, i) => (
                 <div key={i} className="px-8 space-y-1 group hover:bg-white/5 transition-colors cursor-default py-4 md:py-0">
                    <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-2">
@@ -89,60 +89,93 @@ export default function Home() {
         <section className="py-32 px-6 max-w-7xl mx-auto space-y-20">
            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-l-4 border-sky-500 pl-8">
               <div className="space-y-4">
-                 <h2 className="text-5xl font-black font-display tracking-tighter uppercase leading-none">Our Core <span className="text-sky-400">Verticals</span></h2>
+                 <h2 className="text-5xl font-black font-display tracking-tighter uppercase leading-none">Our Core <span className="text-sky-400">Divisions</span></h2>
                  <p className="text-slate-400 max-w-xl text-lg font-medium leading-relaxed">
-                   From automotive assembly to aerospace inspection, we design and deploy 
-                   high-availability systems that redefine efficiency.
+                   Providing complete industrial solutions. We design the intelligence (Systems Integration) 
+                   and build the hardware (Contract Manufacturing) under one roof.
                  </p>
               </div>
               <div className="flex items-center gap-4 text-xs font-black uppercase tracking-widest text-slate-500">
-                 Integrated Systems <span className="w-8 h-[1px] bg-slate-800" /> V.04 Revision
+                 Height Automation <span className="w-8 h-[1px] bg-slate-800" /> V.05 Revision
               </div>
            </div>
            
-           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-              {[
-                { 
-                  title: 'Robotic Integration', 
-                  desc: 'Multi-axis robot integration for welding, pick-and-place, and assembly.',
-                  icon: Bot,
-                  bg: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800'
-                },
-                { 
-                  title: 'Machine Vision', 
-                  desc: 'High-speed AI inspection and non-contact metrology systems.',
-                  icon: Eye,
-                  bg: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&q=80&w=800'
-                },
-                { 
-                  title: 'Safety Engineering', 
-                  desc: 'ISO-compliant safety cells with laser scanner & light curtain logic.',
-                  icon: Shield,
-                  bg: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=800'
-                }
-              ].map((service, i) => (
-                <div key={i} className="group relative glass aspect-[3/4] overflow-hidden flex flex-col justify-end p-8 border-white/5 hover:border-sky-500/50 transition-all">
-                   <div className="absolute inset-0 w-full h-full -z-10">
-                      <img src={service.bg} className="w-full h-full object-cover grayscale opacity-20 group-hover:scale-110 group-hover:opacity-40 transition-all duration-700" alt="" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
-                   </div>
-                   <div className="space-y-4">
-                      <div className="w-12 h-12 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 group-hover:bg-sky-500 group-hover:text-slate-950 transition-all duration-300">
-                         <service.icon className="w-6 h-6" />
+           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+              {/* Pillar 1: Systems Integration */}
+              <div className="space-y-8 bg-slate-900/10 border border-white/5 rounded-[2rem] p-8 md:p-12 hover:border-sky-500/20 transition-all">
+                 <div className="space-y-2">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-400 text-[10px] font-black uppercase tracking-widest">
+                       Systems Integration
+                    </div>
+                    <h3 className="text-3xl font-black uppercase tracking-tighter font-display">Robotics & Vision</h3>
+                    <p className="text-slate-400 text-sm leading-relaxed max-w-md">
+                       Designing and deploying industrial robotic workcells, custom machine vision inspection, and ISO-compliant cell safeguarding.
+                    </p>
+                 </div>
+
+                 <div className="grid grid-cols-1 gap-6 pt-4">
+                    {[
+                      { title: 'Robotic Workcells', desc: 'Multi-axis robotic cells for high-speed assembly, welding, and pick-and-place routing.', icon: Bot },
+                      { title: 'Optical Metrology & AI', desc: 'AI-driven custom vision solutions for sub-millimeter non-contact inspection and guidance.', icon: Eye },
+                      { title: 'Safety Engineering', desc: 'ISO-compliant cells engineered with smart scanners, light curtains, and integrated safety PLCs.', icon: Shield }
+                    ].map((item, i) => (
+                      <div key={i} className="glass p-6 border-white/5 hover:border-sky-500/30 group transition-all flex gap-6 items-start">
+                         <div className="shrink-0 w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 group-hover:bg-sky-500 group-hover:text-slate-950 transition-all duration-300">
+                            <item.icon className="w-5 h-5" />
+                         </div>
+                         <div className="space-y-1">
+                            <h4 className="font-bold text-white uppercase text-sm tracking-tight">{item.title}</h4>
+                            <p className="text-slate-500 text-xs leading-relaxed">{item.desc}</p>
+                         </div>
                       </div>
-                      <h3 className="text-2xl font-black uppercase tracking-tighter">{service.title}</h3>
-                      <p className="text-slate-400 text-sm leading-relaxed translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
-                         {service.desc}
-                      </p>
-                      <Link 
-                        href={service.title === 'Robotic Integration' ? "/quote" : service.title === 'Machine Vision' ? "/gallery" : "/quote"}
-                        className="text-[10px] font-black text-sky-400 uppercase tracking-widest pt-4 flex items-center gap-2 group-hover:translate-x-2 transition-transform"
-                      >
-                         Explore Tech <ArrowRight className="w-3 h-3" />
-                      </Link>
-                   </div>
-                </div>
-              ))}
+                    ))}
+                 </div>
+                 
+                 <div className="pt-4">
+                    <Link href="/quote" className="btn-primary group h-12 px-8 text-xs">
+                       Initiate Integration Study
+                       <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                 </div>
+              </div>
+
+              {/* Pillar 2: Contract Manufacturing */}
+              <div className="space-y-8 bg-slate-900/10 border border-white/5 rounded-[2rem] p-8 md:p-12 hover:border-emerald-500/20 transition-all">
+                 <div className="space-y-2">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-black uppercase tracking-widest">
+                       Contract Manufacturing
+                    </div>
+                    <h3 className="text-3xl font-black uppercase tracking-tighter font-display">Production Capacity</h3>
+                    <p className="text-slate-400 text-sm leading-relaxed max-w-md">
+                       Precision sheet metal work, multi-axis CNC machining, high-capacity SMT PCB assembly, and turnkey electromechanical box builds.
+                    </p>
+                 </div>
+
+                 <div className="grid grid-cols-1 gap-6 pt-4">
+                    {[
+                      { title: 'PCB Assembly (PCBA)', desc: 'Full SMT lines with inline AOI/SPI and wave through-hole assembly for rugged electronics.', icon: Cpu },
+                      { title: 'Precision CNC & Sheet Metal', desc: 'High-speed laser cutting, bending, and multi-axis milling for custom chassis and bracketry.', icon: Wrench },
+                      { title: 'Electromechanical Box Builds', desc: 'Turnkey sub-panel layouts, full wiring integration, pneumatic lines, and quality verification.', icon: Settings }
+                    ].map((item, i) => (
+                      <div key={i} className="glass p-6 border-white/5 hover:border-emerald-500/30 group transition-all flex gap-6 items-start">
+                         <div className="shrink-0 w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover:bg-emerald-500 group-hover:text-slate-950 transition-all duration-300">
+                            <item.icon className="w-5 h-5" />
+                         </div>
+                         <div className="space-y-1">
+                            <h4 className="font-bold text-white uppercase text-sm tracking-tight">{item.title}</h4>
+                            <p className="text-slate-500 text-xs leading-relaxed">{item.desc}</p>
+                         </div>
+                      </div>
+                    ))}
+                 </div>
+
+                 <div className="pt-4">
+                    <Link href="/quote" className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-slate-950 font-black text-xs uppercase tracking-[0.2em] h-12 px-8 rounded-xl shadow-[0_10px_20px_rgba(16,185,129,0.15)] hover:shadow-[0_10px_20px_rgba(16,185,129,0.3)] transition-all group">
+                       Request Manufacturing RFQ
+                       <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                 </div>
+              </div>
            </div>
         </section>
 
