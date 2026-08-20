@@ -84,7 +84,7 @@ export async function POST(req: Request) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Height Automation Portal <rfq@heightautomation.com>', // Note: Domain must be verified in Resend
+        from: 'Height Automation Portal <onboarding@resend.dev>', // Fallback sender to bypass domain verification. Change to rfq@heightautomation.com once domain is verified in Resend.
         to: ['Sales@heightautomation.com'],
         subject: `[RFQ - ${typeLabel}] ${subject || 'New Inquiry from ' + company}`,
         html: emailBody,
