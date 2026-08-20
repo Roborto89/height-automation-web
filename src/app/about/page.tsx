@@ -155,7 +155,7 @@ export default function AboutPage() {
                        <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Systems Deployed</p>
                     </div>
                     <div className="glass bg-white/5 border-white/5 p-8 flex flex-col justify-center gap-2 mt-8">
-                       <p className="text-4xl font-black text-emerald-400">50k Sq Ft</p>
+                       <p className="text-4xl font-black text-emerald-400">8k Sq Ft</p>
                        <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Active Facility Capacity</p>
                     </div>
                     <div className="glass bg-white/5 border-white/5 p-8 flex flex-col justify-center gap-2">

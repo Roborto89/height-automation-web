@@ -72,11 +72,11 @@ export default function Footer() {
           <ul className="space-y-4">
             <li className="flex items-start gap-3">
               <Mail className="w-4 h-4 text-sky-500 shrink-0 mt-0.5" />
-              <span className="text-slate-400 text-sm">contact@heightautomation.com</span>
+              <span className="text-slate-400 text-sm">Sales@heightautomation.com</span>
             </li>
             <li className="flex items-start gap-3">
               <MapPin className="w-4 h-4 text-sky-500 shrink-0 mt-0.5" />
-              <span className="text-slate-400 text-sm">Industrial Parkway, <br />Global HQ</span>
+              <span className="text-slate-400 text-sm">Grain Valley, MO</span>
             </li>
             <li className="flex items-start gap-3 group cursor-pointer">
               <Linkedin className="w-4 h-4 text-sky-500 shrink-0 mt-0.5" />

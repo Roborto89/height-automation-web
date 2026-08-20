@@ -71,7 +71,7 @@ export default function Home() {
            <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 divide-x divide-white/5 py-10">
               {[
                 { label: 'Systems Deployed', value: '120+', icon: Bot },
-                { label: 'Manufacturing Floor', value: '50k SQ FT', icon: Settings },
+                { label: 'Manufacturing Floor', value: '8k SQ FT', icon: Settings },
                 { label: 'Quality Standard', value: 'ISO 9001', icon: Shield },
                 { label: 'Delivery Rate', value: '99.8% OTD', icon: Globe }
               ].map((stat, i) => (
