@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { CheckCircle2, Mail, Settings, User, Building, Phone, Send, Info, ChevronRight } from "lucide-react";
+import { CheckCircle2, Mail, Settings, User, Building, Phone, Send, Info, ChevronRight, Loader2 } from "lucide-react";
 
 export default function QuotePage() {
   const [rfqType, setRfqType] = useState<'automation' | 'manufacturing'>('automation');
@@ -19,6 +19,8 @@ export default function QuotePage() {
   // Checklist states
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const toggleService = (service: string) => {
     setSelectedServices(prev => 
@@ -51,10 +53,45 @@ export default function QuotePage() {
 
   const activeServicesList = rfqType === 'automation' ? automationServices : manufacturingServices;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !company || !email || !description) return;
-    setIsSubmitted(true);
+    
+    setIsSubmitting(true);
+    setSubmitError("");
+
+    try {
+      const response = await fetch('/api/rfq', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          rfqType,
+          name,
+          company,
+          email,
+          phone,
+          subject,
+          description,
+          budget,
+          timeline,
+          selectedServices
+        }),
+      });
+
+      const data = await response.json();
+      if (response.ok && data.success) {
+        setIsSubmitted(true);
+      } else {
+        setSubmitError(data.error || "Submission failed. Please try again.");
+      }
+    } catch (err) {
+      console.error("RFQ Submission Error:", err);
+      setSubmitError("Network delivery failure. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (isSubmitted) {
@@ -307,19 +344,35 @@ export default function QuotePage() {
               />
             </div>
 
+            {/* Submit Error */}
+            {submitError && (
+              <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-xs font-bold text-red-400 uppercase tracking-widest animate-in fade-in slide-in-from-top-2">
+                {submitError}
+              </div>
+            )}
+
             {/* Submit Button */}
             <div className="pt-4 border-t border-white/5 flex justify-end">
               <button
                 type="submit"
-                disabled={!name || !company || !email || !description}
+                disabled={isSubmitting || !name || !company || !email || !description}
                 className={`w-full md:w-auto h-12 px-8 flex items-center justify-center gap-2 rounded-xl text-slate-950 font-black text-xs uppercase tracking-[0.2em] transition-all duration-300 disabled:opacity-30 ${
                   rfqType === 'automation'
                     ? 'bg-sky-400 hover:bg-sky-300 hover:shadow-[0_10px_20px_rgba(14,165,233,0.2)]'
                     : 'bg-emerald-400 hover:bg-emerald-300 hover:shadow-[0_10px_20px_rgba(16,185,129,0.2)]'
                 }`}
               >
-                <span>Submit RFQ Specifications</span>
-                <Send className="w-4 h-4" />
+                {isSubmitting ? (
+                  <>
+                    <span>Transmitting...</span>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  </>
+                ) : (
+                  <>
+                    <span>Submit RFQ Specifications</span>
+                    <Send className="w-4 h-4" />
+                  </>
+                )}
               </button>
             </div>
           </form>
